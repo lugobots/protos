@@ -31,7 +31,7 @@
     - [Team.Side](#lugo.Team.Side)
   
   
-    - [GameServer](#lugo.GameServer)
+    - [Game](#lugo.Game)
   
 
 - [Scalar Value Types](#scalar-value-types)
@@ -370,9 +370,9 @@ Stores all team elements and data.
  
 
 
-<a name="lugo.GameServer"></a>
+<a name="lugo.Game"></a>
 
-### GameServer
+### Game
 Service provided by the game service to the players (clients).
 
 | Method Name | Request Type | Response Type | Description |

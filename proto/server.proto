@@ -5,7 +5,7 @@ import "physics.proto";
 package lugo;
 
 // Service provided by the game service to the players (clients).
-service GameServer {
+service Game {
     // JoinATeam allows the player to listen the server during the match.
     rpc JoinATeam (JoinRequest) returns (stream GameSnapshot);
     // SendOrders allows the player to send others to the server when the game is on listening state.
