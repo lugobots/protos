@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+import "proto/physics.proto";
+import "proto/server.proto";
+import "google/protobuf/empty.proto";
+
+package proto;
+
+service Remote {
+    rpc PauseOrResume (google.protobuf.Empty) returns (CommandResponse);
+    rpc NextTurn (google.protobuf.Empty) returns (CommandResponse);
+    rpc NextOrder (google.protobuf.Empty) returns (CommandResponse);
+    rpc SetBallProperties (BallProperties) returns (CommandResponse);
+    rpc SetPlayerProperties (PlayerProperties) returns (CommandResponse);
+    rpc SetGameProperties (GameProperties) returns (CommandResponse);
+}
+
+message BallProperties {
+    Point Position = 1;
+    Velocity velocity = 2;
+    Player holder = 3;
+}
+
+message PlayerProperties {
+    Team.Side side = 1;
+    uint32 number = 2;
+    Point Position = 3;
+    Velocity velocity = 4;
+}
+
+message GameProperties {
+    uint32 turn = 1;
+    uint32 home_score = 2;
+    uint32 away_score = 3;
+    int64 frame_interval = 4;
+
+}
+
+message CommandResponse {
+    enum StatusCode {
+        SUCCESS = 0;
+        INVALID_VALUE = 1;
+        DEADLINE_EXCEEDED = 2;
+        OTHER = 99;
+    }
+    StatusCode code = 1;
+    GameSnapshot game_snapshot = 2;
+    string details = 3;
+}

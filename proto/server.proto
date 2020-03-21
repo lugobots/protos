@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-import "physics.proto";
+import "proto/physics.proto";
 
-package lugo;
+package proto;
 
 // Service provided by the game service to the players (clients).
 service Game {

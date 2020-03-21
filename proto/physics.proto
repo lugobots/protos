@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package lugo;
+package proto;
 
 /*
 * Vector represent one direction on a cartesian plan
