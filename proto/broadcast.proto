@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+import "proto/server.proto";
+import "google/protobuf/empty.proto";
+
+package proto;
+
+service Broadcast {
+    rpc OnEvent (google.protobuf.Empty) returns (stream GameEvent);
+}
+
+message GameEvent {
+    GameSnapshot game_snapshot = 1;
+    oneof event {
+        EventNewPlayer new_player = 2;
+        EventLostPlayer lost_player = 3;
+        EventStateChange state_change = 4;
+        EventGameOver game_over = 5;
+        EventDebugBreakpoint breakpoint = 6;
+        EventDebugReleased debug_released = 7;
+    }
+}
+
+message EventNewPlayer {
+    Player player = 1;
+}
+message EventLostPlayer {
+    Player player = 1;
+}
+
+message EventStateChange {
+    GameSnapshot.State previous_state = 1;
+    GameSnapshot.State new_state = 2;
+}
+
+message EventGameOver {
+}
+
+message EventDebugBreakpoint {
+    enum Breakpoint {
+        StopByOrder = 0;
+        StopByTurn = 1;
+    }
+}
+
+message EventDebugReleased {
+}

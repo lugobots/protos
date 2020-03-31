@@ -29,7 +29,7 @@ message JoinRequest {
 
 // GameSnapshot stores all game elements data.
 message GameSnapshot {
-    enum Phase {
+    enum State {
         // The game is waiting for all players be connected. There is a configurable time limit to wait for players. After
         // this limit expires, the match is considered over.
         WAITING = 0;
@@ -57,7 +57,7 @@ message GameSnapshot {
     }
     // The game state defines which phase the game is. The phase determine what the server is doing, are going to do, or
     // what it is waiting for.
-    Phase state = 1;
+    State state = 1;
     // Turns counter. It starts from 1, but before the match starts, it may be zero.
     uint32 turn = 2;
     // Store the home team elements.
