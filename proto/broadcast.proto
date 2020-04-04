@@ -3,7 +3,7 @@ syntax = "proto3";
 import "proto/server.proto";
 import "google/protobuf/empty.proto";
 
-package proto;
+package lugo;
 
 service Broadcast {
     rpc OnEvent (google.protobuf.Empty) returns (stream GameEvent);
@@ -41,6 +41,7 @@ message EventDebugBreakpoint {
         StopByOrder = 0;
         StopByTurn = 1;
     }
+    Breakpoint breakpoint = 1;
 }
 
 message EventDebugReleased {

@@ -4,7 +4,7 @@ import "proto/physics.proto";
 import "proto/server.proto";
 import "google/protobuf/empty.proto";
 
-package proto;
+package lugo;
 
 service Remote {
     rpc PauseOrResume (google.protobuf.Empty) returns (CommandResponse);
