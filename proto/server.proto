@@ -49,6 +49,10 @@ message GameSnapshot {
         // The ball kick is processed immediately after the order (the ball position is updated as its new velocity
         // after the kick)
         PLAYING = 3;
+        // The game interrupt the match to shift the ball possession. It happens only when the shot time is over (see
+        // shot_clock property). The ball will be given to the goalkeeper of the defense team, and the next state will
+        // "listening", so the bots will not have time to rearrange before the next turn.
+        SHIFTING = 4;
         // The game may be over after any phase.
         // It can be over after Waiting if there is no players connected after the time limit for connections
         // It can be over after GetReady or Listening if there is no enough players (e.g. connection lost)
@@ -66,6 +70,8 @@ message GameSnapshot {
     Team away_team = 4;
     // Store the ball element.
     Ball ball = 5;
+    // Store the shot clock to control ball possession limit
+    ShotClock shot_clock = 6;
 }
 
 // Stores all team elements and data.
@@ -84,6 +90,15 @@ message Team {
     }
     // Side which the team is playing on.
     Side side = 4;
+}
+
+// Stores the side of the team in attack and the time remaining holding the ball.
+// The team side is changed as soon a bot of the defense team catch the ball.
+message ShotClock {
+    // Team side of the team in attack.
+    Team.Side team_side = 6;
+    // Remaining turns the attack team may hold the ball
+    uint32 turns = 7;
 }
 
 // Stores all player attributes
