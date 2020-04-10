@@ -1,15 +1,19 @@
 syntax = "proto3";
 
-import "proto/server.proto";
+import "server.proto";
 import "google/protobuf/empty.proto";
 
 package lugo;
 
+// Service to be used by clients (e.g. frontend, app, etc) to watch the match.
 service Broadcast {
+    // Keep an open stream that publish all important events in the match.
     rpc OnEvent (google.protobuf.Empty) returns (stream GameEvent);
 }
 
+// Brings the game snapshot and the event in a specialised format.
 message GameEvent {
+    // Game snapshot after the event has happened.
     GameSnapshot game_snapshot = 1;
     oneof event {
         EventNewPlayer new_player = 2;
@@ -21,28 +25,44 @@ message GameEvent {
     }
 }
 
+// Represents the event of having a new player connected to the game.
 message EventNewPlayer {
-    Player player = 1;
-}
-message EventLostPlayer {
+    // Player that has connected to the game.
     Player player = 1;
 }
 
+// Represents the event of having a player disconnected from the game.
+message EventLostPlayer {
+    // Player that has disconnected from the game.
+    Player player = 1;
+}
+
+// Represents the event of having the game state changed (e.g. from Waiting to GetReady).
 message EventStateChange {
+    // State of the game before the event.
     GameSnapshot.State previous_state = 1;
+    // State of the game after the event.
     GameSnapshot.State new_state = 2;
 }
 
+// Represents the event of having the game ended.
 message EventGameOver {
 }
 
+// (only available dev mode) Represents the event of having a breakpoint reached.
 message EventDebugBreakpoint {
     enum Breakpoint {
+        // Breakpoint that breaks the game before each player orders set be processed during the "Playing" state
+        // Each player's order set will be processed at once, so the breakpoint controls the process based on
+        // players, not on orders.
         StopByOrder = 0;
+        // Breakpoint that breaks the game before each player turn be processed during the "Playing" state
         StopByTurn = 1;
     }
+    // Type of the breakpoint reached.
     Breakpoint breakpoint = 1;
 }
 
+// (only available dev mode) Represents the event of having a breakpoint released.
 message EventDebugReleased {
 }

@@ -3,6 +3,21 @@
 
 ## Table of Contents
 
+- [broadcast.proto](#broadcast.proto)
+    - [EventDebugBreakpoint](#lugo.EventDebugBreakpoint)
+    - [EventDebugReleased](#lugo.EventDebugReleased)
+    - [EventGameOver](#lugo.EventGameOver)
+    - [EventLostPlayer](#lugo.EventLostPlayer)
+    - [EventNewPlayer](#lugo.EventNewPlayer)
+    - [EventStateChange](#lugo.EventStateChange)
+    - [GameEvent](#lugo.GameEvent)
+  
+    - [EventDebugBreakpoint.Breakpoint](#lugo.EventDebugBreakpoint.Breakpoint)
+  
+  
+    - [Broadcast](#lugo.Broadcast)
+  
+
 - [physics.proto](#physics.proto)
     - [Point](#lugo.Point)
     - [Vector](#lugo.Vector)
@@ -10,6 +25,18 @@
   
   
   
+  
+
+- [remote.proto](#remote.proto)
+    - [BallProperties](#lugo.BallProperties)
+    - [CommandResponse](#lugo.CommandResponse)
+    - [GameProperties](#lugo.GameProperties)
+    - [PlayerProperties](#lugo.PlayerProperties)
+  
+    - [CommandResponse.StatusCode](#lugo.CommandResponse.StatusCode)
+  
+  
+    - [Remote](#lugo.Remote)
   
 
 - [server.proto](#server.proto)
@@ -24,9 +51,10 @@
     - [OrderResponse](#lugo.OrderResponse)
     - [OrderSet](#lugo.OrderSet)
     - [Player](#lugo.Player)
+    - [ShotClock](#lugo.ShotClock)
     - [Team](#lugo.Team)
   
-    - [GameSnapshot.Phase](#lugo.GameSnapshot.Phase)
+    - [GameSnapshot.State](#lugo.GameSnapshot.State)
     - [OrderResponse.StatusCode](#lugo.OrderResponse.StatusCode)
     - [Team.Side](#lugo.Team.Side)
   
@@ -35,6 +63,146 @@
   
 
 - [Scalar Value Types](#scalar-value-types)
+
+
+
+<a name="broadcast.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## broadcast.proto
+
+
+
+<a name="lugo.EventDebugBreakpoint"></a>
+
+### EventDebugBreakpoint
+(only available dev mode) Represents the event of having a breakpoint reached.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| breakpoint | [EventDebugBreakpoint.Breakpoint](#lugo.EventDebugBreakpoint.Breakpoint) |  | Type of the breakpoint reached. |
+
+
+
+
+
+
+<a name="lugo.EventDebugReleased"></a>
+
+### EventDebugReleased
+(only available dev mode) Represents the event of having a breakpoint released.
+
+
+
+
+
+
+<a name="lugo.EventGameOver"></a>
+
+### EventGameOver
+Represents the event of having the game ended.
+
+
+
+
+
+
+<a name="lugo.EventLostPlayer"></a>
+
+### EventLostPlayer
+Represents the event of having a player disconnected from the game.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| player | [Player](#lugo.Player) |  | Player that has disconnected from the game. |
+
+
+
+
+
+
+<a name="lugo.EventNewPlayer"></a>
+
+### EventNewPlayer
+Represents the event of having a new player connected to the game.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| player | [Player](#lugo.Player) |  | Player that has connected to the game. |
+
+
+
+
+
+
+<a name="lugo.EventStateChange"></a>
+
+### EventStateChange
+Represents the event of having the game state changed (e.g. from Waiting to GetReady).
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| previous_state | [GameSnapshot.State](#lugo.GameSnapshot.State) |  | State of the game before the event. |
+| new_state | [GameSnapshot.State](#lugo.GameSnapshot.State) |  | State of the game after the event. |
+
+
+
+
+
+
+<a name="lugo.GameEvent"></a>
+
+### GameEvent
+Brings the game snapshot and the event in a specialised format.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| game_snapshot | [GameSnapshot](#lugo.GameSnapshot) |  | Game snapshot after the event has happened. |
+| new_player | [EventNewPlayer](#lugo.EventNewPlayer) |  |  |
+| lost_player | [EventLostPlayer](#lugo.EventLostPlayer) |  |  |
+| state_change | [EventStateChange](#lugo.EventStateChange) |  |  |
+| game_over | [EventGameOver](#lugo.EventGameOver) |  |  |
+| breakpoint | [EventDebugBreakpoint](#lugo.EventDebugBreakpoint) |  |  |
+| debug_released | [EventDebugReleased](#lugo.EventDebugReleased) |  |  |
+
+
+
+
+
+ 
+
+
+<a name="lugo.EventDebugBreakpoint.Breakpoint"></a>
+
+### EventDebugBreakpoint.Breakpoint
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| StopByOrder | 0 | Breakpoint that breaks the game before each player orders set be processed during the &#34;Playing&#34; state Each player&#39;s order set will be processed at once, so the breakpoint controls the process based on players, not on orders. |
+| StopByTurn | 1 | Breakpoint that breaks the game before each player turn be processed during the &#34;Playing&#34; state |
+
+
+ 
+
+ 
+
+
+<a name="lugo.Broadcast"></a>
+
+### Broadcast
+Service to be used by clients (e.g. frontend, app, etc) to watch the match.
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| OnEvent | [.google.protobuf.Empty](#google.protobuf.Empty) | [GameEvent](#lugo.GameEvent) stream | Keep an open stream that publish all important events in the match. |
+
+ 
 
 
 
@@ -104,6 +272,121 @@ It defines the velocity of an object.
 
 
 
+<a name="remote.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## remote.proto
+
+
+
+<a name="lugo.BallProperties"></a>
+
+### BallProperties
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| Position | [Point](#lugo.Point) |  |  |
+| velocity | [Velocity](#lugo.Velocity) |  |  |
+| holder | [Player](#lugo.Player) |  |  |
+
+
+
+
+
+
+<a name="lugo.CommandResponse"></a>
+
+### CommandResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| code | [CommandResponse.StatusCode](#lugo.CommandResponse.StatusCode) |  |  |
+| game_snapshot | [GameSnapshot](#lugo.GameSnapshot) |  |  |
+| details | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="lugo.GameProperties"></a>
+
+### GameProperties
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| turn | [uint32](#uint32) |  |  |
+| home_score | [uint32](#uint32) |  |  |
+| away_score | [uint32](#uint32) |  |  |
+| frame_interval | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="lugo.PlayerProperties"></a>
+
+### PlayerProperties
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| side | [Team.Side](#lugo.Team.Side) |  |  |
+| number | [uint32](#uint32) |  |  |
+| Position | [Point](#lugo.Point) |  |  |
+| velocity | [Velocity](#lugo.Velocity) |  |  |
+
+
+
+
+
+ 
+
+
+<a name="lugo.CommandResponse.StatusCode"></a>
+
+### CommandResponse.StatusCode
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| SUCCESS | 0 |  |
+| INVALID_VALUE | 1 |  |
+| DEADLINE_EXCEEDED | 2 |  |
+| OTHER | 99 |  |
+
+
+ 
+
+ 
+
+
+<a name="lugo.Remote"></a>
+
+### Remote
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| PauseOrResume | [.google.protobuf.Empty](#google.protobuf.Empty) | [CommandResponse](#lugo.CommandResponse) |  |
+| NextTurn | [.google.protobuf.Empty](#google.protobuf.Empty) | [CommandResponse](#lugo.CommandResponse) |  |
+| NextOrder | [.google.protobuf.Empty](#google.protobuf.Empty) | [CommandResponse](#lugo.CommandResponse) |  |
+| SetBallProperties | [BallProperties](#lugo.BallProperties) | [CommandResponse](#lugo.CommandResponse) |  |
+| SetPlayerProperties | [PlayerProperties](#lugo.PlayerProperties) | [CommandResponse](#lugo.CommandResponse) |  |
+| SetGameProperties | [GameProperties](#lugo.GameProperties) | [CommandResponse](#lugo.CommandResponse) |  |
+
+ 
+
+
+
 <a name="server.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -148,11 +431,12 @@ GameSnapshot stores all game elements data.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| state | [GameSnapshot.Phase](#lugo.GameSnapshot.Phase) |  | The game state defines which phase the game is. The phase determine what the server is doing, are going to do, or what it is waiting for. |
+| state | [GameSnapshot.State](#lugo.GameSnapshot.State) |  | The game state defines which phase the game is. The phase determine what the server is doing, are going to do, or what it is waiting for. |
 | turn | [uint32](#uint32) |  | Turns counter. It starts from 1, but before the match starts, it may be zero. |
 | home_team | [Team](#lugo.Team) |  | Store the home team elements. |
 | away_team | [Team](#lugo.Team) |  | Store the away team elements. |
 | ball | [Ball](#lugo.Ball) |  | Store the ball element. |
+| shot_clock | [ShotClock](#lugo.ShotClock) |  |  |
 
 
 
@@ -304,6 +588,23 @@ Stores all player attributes
 
 
 
+<a name="lugo.ShotClock"></a>
+
+### ShotClock
+Stores the side of the team in attack and the time remaining holding the ball.
+The team side is changed as soon a bot of the defense team catch the ball.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| team_side | [Team.Side](#lugo.Team.Side) |  | Team side of the team in attack. |
+| turns | [uint32](#uint32) |  | Remaining turns the attack team may hold the ball |
+
+
+
+
+
+
 <a name="lugo.Team"></a>
 
 ### Team
@@ -324,9 +625,9 @@ Stores all team elements and data.
  
 
 
-<a name="lugo.GameSnapshot.Phase"></a>
+<a name="lugo.GameSnapshot.State"></a>
 
-### GameSnapshot.Phase
+### GameSnapshot.State
 
 
 | Name | Number | Description |
@@ -335,6 +636,7 @@ Stores all team elements and data.
 | GET_READY | 1 | The game resets the players position to start the match or to restart the match after a goal. |
 | LISTENING | 2 | The game is waiting for players orders. There is a configurable time window for this phase. After the time limit expires, the server will ignore the missing orders and process the ones it got. (when running on dev mode, the server may allow different behaviours) |
 | PLAYING | 3 | The game is executing the players&#39; orders in the same sequence they were gotten. If the ball is NOT been holden, its velocity will be processed first. Otherwise, it position will be updated when the ball holder movement be processed. If there is no movement orders from a player, but it has speed greater than 0, it will be processed after all its orders are processed. Each player orders will be processed in the same sequence they were included in the message (e.g. first move, than kick) The ball kick is processed immediately after the order (the ball position is updated as its new velocity after the kick) |
+| SHIFTING | 4 | The game interrupt the match to shift the ball possession. It happens only when the shot time is over (see shot_clock property). The ball will be given to the goalkeeper of the defense team, and the next state will &#34;listening&#34;, so the bots will not have time to rearrange before the next turn. |
 | OVER | 99 | The game may be over after any phase. It can be over after Waiting if there is no players connected after the time limit for connections It can be over after GetReady or Listening if there is no enough players (e.g. connection lost) And it also can be over after Playing state if that was the last turn of the match. |
 
 
@@ -386,21 +688,21 @@ Service provided by the game service to the players (clients).
 
 ## Scalar Value Types
 
-| .proto Type | Notes | C++ Type | Java Type | Python Type |
-| ----------- | ----- | -------- | --------- | ----------- |
-| <a name="double" /> double |  | double | double | float |
-| <a name="float" /> float |  | float | float | float |
-| <a name="int32" /> int32 | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead. | int32 | int | int |
-| <a name="int64" /> int64 | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead. | int64 | long | int/long |
-| <a name="uint32" /> uint32 | Uses variable-length encoding. | uint32 | int | int/long |
-| <a name="uint64" /> uint64 | Uses variable-length encoding. | uint64 | long | int/long |
-| <a name="sint32" /> sint32 | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s. | int32 | int | int |
-| <a name="sint64" /> sint64 | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s. | int64 | long | int/long |
-| <a name="fixed32" /> fixed32 | Always four bytes. More efficient than uint32 if values are often greater than 2^28. | uint32 | int | int |
-| <a name="fixed64" /> fixed64 | Always eight bytes. More efficient than uint64 if values are often greater than 2^56. | uint64 | long | int/long |
-| <a name="sfixed32" /> sfixed32 | Always four bytes. | int32 | int | int |
-| <a name="sfixed64" /> sfixed64 | Always eight bytes. | int64 | long | int/long |
-| <a name="bool" /> bool |  | bool | boolean | boolean |
-| <a name="string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode |
-| <a name="bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str |
+| .proto Type | Notes | C++ | Java | Python | Go | C# | PHP | Ruby |
+| ----------- | ----- | --- | ---- | ------ | -- | -- | --- | ---- |
+| <a name="double" /> double |  | double | double | float | float64 | double | float | Float |
+| <a name="float" /> float |  | float | float | float | float32 | float | float | Float |
+| <a name="int32" /> int32 | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead. | int32 | int | int | int32 | int | integer | Bignum or Fixnum (as required) |
+| <a name="int64" /> int64 | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead. | int64 | long | int/long | int64 | long | integer/string | Bignum |
+| <a name="uint32" /> uint32 | Uses variable-length encoding. | uint32 | int | int/long | uint32 | uint | integer | Bignum or Fixnum (as required) |
+| <a name="uint64" /> uint64 | Uses variable-length encoding. | uint64 | long | int/long | uint64 | ulong | integer/string | Bignum or Fixnum (as required) |
+| <a name="sint32" /> sint32 | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s. | int32 | int | int | int32 | int | integer | Bignum or Fixnum (as required) |
+| <a name="sint64" /> sint64 | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s. | int64 | long | int/long | int64 | long | integer/string | Bignum |
+| <a name="fixed32" /> fixed32 | Always four bytes. More efficient than uint32 if values are often greater than 2^28. | uint32 | int | int | uint32 | uint | integer | Bignum or Fixnum (as required) |
+| <a name="fixed64" /> fixed64 | Always eight bytes. More efficient than uint64 if values are often greater than 2^56. | uint64 | long | int/long | uint64 | ulong | integer/string | Bignum |
+| <a name="sfixed32" /> sfixed32 | Always four bytes. | int32 | int | int | int32 | int | integer | Bignum or Fixnum (as required) |
+| <a name="sfixed64" /> sfixed64 | Always eight bytes. | int64 | long | int/long | int64 | long | integer/string | Bignum |
+| <a name="bool" /> bool |  | bool | boolean | boolean | bool | bool | boolean | TrueClass/FalseClass |
+| <a name="string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode | string | string | string | String (UTF-8) |
+| <a name="bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str | []byte | ByteString | string | String (ASCII-8BIT) |
 

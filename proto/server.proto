@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "proto/physics.proto";
+import "physics.proto";
 
 package lugo;
 

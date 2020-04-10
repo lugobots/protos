@@ -2,9 +2,7 @@ syntax = "proto3";
 
 package lugo;
 
-/*
-* Vector represent one direction on a cartesian plan
-*/
+//Vector represent one direction on a cartesian plan
 message Vector {
     // Coordinate X to define the vector direction.
     double X = 1;
@@ -12,10 +10,8 @@ message Vector {
     double Y = 2;
 }
 
-/*
-* Point represents one position on the cartesian plan of the game field.
-* The coordinates start at the left bottom corner from the top view .
-*/
+// Point represents one position on the cartesian plan of the game field.
+// The coordinates start at the left bottom corner from the top view .
 message Point {
     // Distance from the Y axis to right.
     int32 X = 1;
@@ -23,10 +19,8 @@ message Point {
     int32 Y = 2;
 }
 
-/*
-* Velocity is a tuple with the direction (a vector) an a speed (float) values.
-* It defines the velocity of an object.
-*/
+// Velocity is a tuple with the direction (a vector) an a speed (float) values.
+// It defines the velocity of an object.
 message Velocity {
     // Direction is a normalised vector that indicates the element direction
     Vector direction = 1;
