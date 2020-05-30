@@ -6,6 +6,8 @@ import "google/protobuf/empty.proto";
 
 package lugo;
 
+option go_package  = "github.com/lugobots/lugo4go/lugo";
+
 service Remote {
     rpc PauseOrResume (google.protobuf.Empty) returns (CommandResponse);
     rpc NextTurn (google.protobuf.Empty) returns (CommandResponse);

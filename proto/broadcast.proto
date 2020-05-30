@@ -1,14 +1,20 @@
 syntax = "proto3";
 
 import "server.proto";
-import "google/protobuf/empty.proto";
 
 package lugo;
+
+option go_package  = "github.com/lugobots/lugo4go/lugo";
 
 // Service to be used by clients (e.g. frontend, app, etc) to watch the match.
 service Broadcast {
     // Keep an open stream that publish all important events in the match.
-    rpc OnEvent (google.protobuf.Empty) returns (stream GameEvent);
+    rpc OnEvent (WatcherRequest) returns (stream GameEvent);
+    rpc GetGameSetup (WatcherRequest) returns (GameSetup);
+}
+
+message WatcherRequest {
+    string UUID = 1;
 }
 
 // Brings the game snapshot and the event in a specialised format.
@@ -23,6 +29,50 @@ message GameEvent {
         EventDebugBreakpoint breakpoint = 6;
         EventDebugReleased debug_released = 7;
     }
+}
+
+message GameSetup {
+    enum StartMode {
+        WAIT = 0;
+        NO_WAIT = 1;
+        DELAY = 2;
+    }
+    enum ListeningMode {
+        // respect the timer defined by listening duration
+        TIMER = 0;
+        // immediately after all orders
+        RUSH = 1;
+        // wait external remote control (dev only)
+        REMOTE = 2;
+    }
+
+    bool dev_mode = 1;
+    StartMode start_mode = 2;
+    ListeningMode listening_mode = 3;
+    // in milliseconds
+    uint32 listening_duration = 4;
+    uint32 game_duration = 5;
+
+    TeamSettings home_team = 6;
+    TeamSettings away_team = 7;
+}
+
+message TeamSettings {
+    string name = 1;
+    Team.Side side = 2;
+    string avatar = 3;
+    TeamColors colors = 4;
+}
+
+message TeamColors {
+    TeamColor primary = 1;
+    TeamColor secondary = 2;
+}
+
+message TeamColor {
+    uint32 red = 1;
+    uint32 green = 2;
+    uint32 blue = 4;
 }
 
 // Represents the event of having a new player connected to the game.
@@ -55,9 +105,9 @@ message EventDebugBreakpoint {
         // Breakpoint that breaks the game before each player orders set be processed during the "Playing" state
         // Each player's order set will be processed at once, so the breakpoint controls the process based on
         // players, not on orders.
-        StopByOrder = 0;
+        ORDERS = 0;
         // Breakpoint that breaks the game before each player turn be processed during the "Playing" state
-        StopByTurn = 1;
+        TURN = 1;
     }
     // Type of the breakpoint reached.
     Breakpoint breakpoint = 1;

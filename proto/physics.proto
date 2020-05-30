@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package lugo;
 
+option go_package  = "github.com/lugobots/lugo4go/lugo";
+
 //Vector represent one direction on a cartesian plan
 message Vector {
     // Coordinate X to define the vector direction.
