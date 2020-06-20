@@ -18,7 +18,7 @@ service Remote {
 }
 
 message BallProperties {
-    Point Position = 1;
+    Point position = 1;
     Velocity velocity = 2;
     Player holder = 3;
 }
@@ -26,7 +26,7 @@ message BallProperties {
 message PlayerProperties {
     Team.Side side = 1;
     uint32 number = 2;
-    Point Position = 3;
+    Point position = 3;
     Velocity velocity = 4;
 }
 

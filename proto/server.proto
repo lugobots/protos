@@ -72,8 +72,10 @@ message GameSnapshot {
     Team away_team = 4;
     // Store the ball element.
     Ball ball = 5;
+    // number of turns the ball is in a goal zone
+    uint32 turns_ball_in_goal_zone = 6;
     // Store the shot clock to control ball possession limit
-    ShotClock shot_clock = 6;
+    ShotClock shot_clock = 7;
 }
 
 // Stores all team elements and data.
@@ -81,9 +83,9 @@ message Team {
     // List of player in the team
     repeated Player players = 1;
     // Team name
-    string Name = 2;
+    string name = 2;
     // Team score in the present turn
-    uint32 Score = 3;
+    uint32 score = 3;
     enum Side {
         // Team playing on the left side of field
         HOME = 0;
@@ -108,7 +110,7 @@ message Player {
     // Number of this player in its team (1-11)
     uint32 number = 1;
     // Current player position
-    Point Position = 2;
+    Point position = 2;
     // Current player velocity
     Velocity velocity = 3;
     // Team side which its playing in (it's used to speed up some readings since the player element will be in a list
@@ -121,7 +123,7 @@ message Player {
 // Stores all ball attributes
 message Ball {
     // Current position
-    Point Position = 1;
+    Point position = 1;
     // Current velocity. It will be the exactly same velocity as the ball holder when a player is holding it.
     Velocity velocity = 2;
     // Player that is currently holding the ball. Null if the ball is not holden.

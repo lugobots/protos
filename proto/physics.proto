@@ -7,18 +7,18 @@ option go_package  = "github.com/lugobots/lugo4go/lugo";
 //Vector represent one direction on a cartesian plan
 message Vector {
     // Coordinate X to define the vector direction.
-    double X = 1;
+    double x = 1;
     // Coordinate Y to define the vector direction.
-    double Y = 2;
+    double y = 2;
 }
 
 // Point represents one position on the cartesian plan of the game field.
 // The coordinates start at the left bottom corner from the top view .
 message Point {
     // Distance from the Y axis to right.
-    int32 X = 1;
+    int32 x = 1;
     // Distance from the X axis to up.
-    int32 Y = 2;
+    int32 y = 2;
 }
 
 // Velocity is a tuple with the direction (a vector) an a speed (float) values.

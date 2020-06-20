@@ -4,95 +4,102 @@ import "server.proto";
 
 package lugo;
 
-option go_package  = "github.com/lugobots/lugo4go/lugo";
+option go_package = "github.com/lugobots/lugo4go/lugo";
 
 // Service to be used by clients (e.g. frontend, app, etc) to watch the match.
 service Broadcast {
-    // Keep an open stream that publish all important events in the match.
-    rpc OnEvent (WatcherRequest) returns (stream GameEvent);
-    rpc GetGameSetup (WatcherRequest) returns (GameSetup);
+  // Keep an open stream that publish all important events in the match.
+  rpc OnEvent (WatcherRequest) returns (stream GameEvent);
+  rpc GetGameSetup (WatcherRequest) returns (GameSetup);
 }
 
 message WatcherRequest {
-    string UUID = 1;
+  string uuid = 1;
 }
 
 // Brings the game snapshot and the event in a specialised format.
 message GameEvent {
-    // Game snapshot after the event has happened.
-    GameSnapshot game_snapshot = 1;
-    oneof event {
-        EventNewPlayer new_player = 2;
-        EventLostPlayer lost_player = 3;
-        EventStateChange state_change = 4;
-        EventGameOver game_over = 5;
-        EventDebugBreakpoint breakpoint = 6;
-        EventDebugReleased debug_released = 7;
-    }
+  // Game snapshot after the event has happened.
+  GameSnapshot game_snapshot = 1;
+  oneof event {
+    EventNewPlayer new_player = 2;
+    EventLostPlayer lost_player = 3;
+    EventStateChange state_change = 4;
+    EventGoal goal = 5;
+    EventGameOver game_over = 6;
+    EventDebugBreakpoint breakpoint = 7;
+    EventDebugReleased debug_released = 8;
+  }
 }
 
 message GameSetup {
-    enum StartMode {
-        WAIT = 0;
-        NO_WAIT = 1;
-        DELAY = 2;
-    }
-    enum ListeningMode {
-        // respect the timer defined by listening duration
-        TIMER = 0;
-        // immediately after all orders
-        RUSH = 1;
-        // wait external remote control (dev only)
-        REMOTE = 2;
-    }
+  enum StartMode {
+    WAIT = 0;
+    NO_WAIT = 1;
+    DELAY = 2;
+  }
+  enum ListeningMode {
+    // respect the timer defined by listening duration
+    TIMER = 0;
+    // immediately after all orders
+    RUSH = 1;
+    // wait external remote control (dev only)
+    REMOTE = 2;
+  }
 
-    bool dev_mode = 1;
-    StartMode start_mode = 2;
-    ListeningMode listening_mode = 3;
-    // in milliseconds
-    uint32 listening_duration = 4;
-    uint32 game_duration = 5;
+  bool dev_mode = 1;
+  StartMode start_mode = 2;
+  ListeningMode listening_mode = 3;
+  // in milliseconds
+  uint32 listening_duration = 4;
+  uint32 game_duration = 5;
 
-    TeamSettings home_team = 6;
-    TeamSettings away_team = 7;
+  TeamSettings home_team = 6;
+  TeamSettings away_team = 7;
 }
 
 message TeamSettings {
-    string name = 1;
-    Team.Side side = 2;
-    string avatar = 3;
-    TeamColors colors = 4;
+  string name = 1;
+  string avatar = 2;
+  TeamColors colors = 3;
 }
 
 message TeamColors {
-    TeamColor primary = 1;
-    TeamColor secondary = 2;
+  TeamColor primary = 1;
+  TeamColor secondary = 2;
 }
 
 message TeamColor {
-    uint32 red = 1;
-    uint32 green = 2;
-    uint32 blue = 4;
+  uint32 red = 1;
+  uint32 green = 2;
+  uint32 blue = 4;
 }
 
 // Represents the event of having a new player connected to the game.
 message EventNewPlayer {
-    // Player that has connected to the game.
-    Player player = 1;
+  // Player that has connected to the game.
+  Player player = 1;
 }
 
 // Represents the event of having a player disconnected from the game.
 message EventLostPlayer {
-    // Player that has disconnected from the game.
-    Player player = 1;
+  // Player that has disconnected from the game.
+  Player player = 1;
 }
 
 // Represents the event of having the game state changed (e.g. from Waiting to GetReady).
 message EventStateChange {
-    // State of the game before the event.
-    GameSnapshot.State previous_state = 1;
-    // State of the game after the event.
-    GameSnapshot.State new_state = 2;
+  // State of the game before the event.
+  GameSnapshot.State previous_state = 1;
+  // State of the game after the event.
+  GameSnapshot.State new_state = 2;
+}
+
+// Represents the event of having a goal during the match
+message EventGoal {
+  // Side of the team that changed the score.
+  Team.Side side = 1;
+  // @todo implementing the player who scored.
 }
 
 // Represents the event of having the game ended.
@@ -101,16 +108,16 @@ message EventGameOver {
 
 // (only available dev mode) Represents the event of having a breakpoint reached.
 message EventDebugBreakpoint {
-    enum Breakpoint {
-        // Breakpoint that breaks the game before each player orders set be processed during the "Playing" state
-        // Each player's order set will be processed at once, so the breakpoint controls the process based on
-        // players, not on orders.
-        ORDERS = 0;
-        // Breakpoint that breaks the game before each player turn be processed during the "Playing" state
-        TURN = 1;
-    }
-    // Type of the breakpoint reached.
-    Breakpoint breakpoint = 1;
+  enum Breakpoint {
+    // Breakpoint that breaks the game before each player orders set be processed during the "Playing" state
+    // Each player's order set will be processed at once, so the breakpoint controls the process based on
+    // players, not on orders.
+    ORDERS = 0;
+    // Breakpoint that breaks the game before each player turn be processed during the "Playing" state
+    TURN = 1;
+  }
+  // Type of the breakpoint reached.
+  Breakpoint breakpoint = 1;
 }
 
 // (only available dev mode) Represents the event of having a breakpoint released.
