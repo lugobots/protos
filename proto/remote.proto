@@ -2,19 +2,25 @@ syntax = "proto3";
 
 import "physics.proto";
 import "server.proto";
-import "google/protobuf/empty.proto";
 
 package lugo;
 
 option go_package  = "github.com/lugobots/lugo4go/lugo";
 
 service Remote {
-    rpc PauseOrResume (google.protobuf.Empty) returns (CommandResponse);
-    rpc NextTurn (google.protobuf.Empty) returns (CommandResponse);
-    rpc NextOrder (google.protobuf.Empty) returns (CommandResponse);
+    rpc PauseOrResume (PauseResumeRequest) returns (CommandResponse);
+    rpc NextTurn (NextTurnRequest) returns (CommandResponse);
+    rpc NextOrder (NextOrderRequest) returns (CommandResponse);
     rpc SetBallProperties (BallProperties) returns (CommandResponse);
     rpc SetPlayerProperties (PlayerProperties) returns (CommandResponse);
     rpc SetGameProperties (GameProperties) returns (CommandResponse);
+}
+
+message PauseResumeRequest {
+}
+message NextTurnRequest {
+}
+message NextOrderRequest {
 }
 
 message BallProperties {
@@ -35,7 +41,7 @@ message GameProperties {
     uint32 home_score = 2;
     uint32 away_score = 3;
     int64 frame_interval = 4;
-
+    ShotClock shot_clock = 5;
 }
 
 message CommandResponse {

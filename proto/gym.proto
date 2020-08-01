@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package lugo;
+import "google/protobuf/any.proto";
+
+option go_package = "github.com/lugobots/lugo4go/lugo";
+
+service Gym {
+
+  rpc GetSetup (SetupRequest) returns (SetupResponse);
+
+}
+
+message SetupRequest {
+}
+
+message SetupResponse {
+  int64 reward_threshold = 1;
+
+  // @todo allowing more complex action spaces
+  int64 action_space = 2;
+
+  google.protobuf.Any observation_space_minimums = 3;
+  google.protobuf.Any observation_space_maximums = 4;
+
+  float min_reward = 5;
+  float max_reward = 6;
+}

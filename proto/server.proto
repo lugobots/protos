@@ -102,7 +102,7 @@ message ShotClock {
     // Team side of the team in attack.
     Team.Side team_side = 6;
     // Remaining turns the attack team may hold the ball
-    uint32 turns = 7;
+    uint32 remaining_turns = 7;
 }
 
 // Stores all player attributes
