@@ -3,12 +3,29 @@ syntax = "proto3";
 package lugo;
 import "google/protobuf/any.proto";
 
-option go_package = "github.com/lugobots/lugo4go/lugo";
+
 
 service Gym {
 
   rpc GetSetup (SetupRequest) returns (SetupResponse);
 
+  rpc Step (StepRequest) returns (StepResponse);
+  rpc Reset (ResetRequest) returns (ResetResponse);
+  rpc Render (RenderRequest) returns (RenderResponse);
+  rpc Close (CloseRequest) returns (CloseResponse);
+
+}
+
+message StepRequest {
+  // See SetupResponse.action_space
+  int64 action = 1;
+}
+
+message StepResponse {
+  google.protobuf.Any ob = 1;
+  float reward = 2;
+  bool episode_over = 3;
+  google.protobuf.Any info = 4;
 }
 
 message SetupRequest {
@@ -25,4 +42,23 @@ message SetupResponse {
 
   float min_reward = 5;
   float max_reward = 6;
+}
+
+message ResetRequest {
+}
+
+message ResetResponse {
+  google.protobuf.Any ob = 1;
+}
+
+message RenderRequest {
+}
+
+message RenderResponse {
+}
+
+message CloseRequest {
+}
+
+message CloseResponse {
 }
