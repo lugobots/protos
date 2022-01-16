@@ -5,7 +5,7 @@ import "server.proto";
 
 package lugo;
 
-option go_package  = "github.com/lugobots/lugo4go/lugo";
+option go_package  = "github.com/lugobots/lugo4go/proto";
 
 service Remote {
     rpc PauseOrResume (PauseResumeRequest) returns (CommandResponse);

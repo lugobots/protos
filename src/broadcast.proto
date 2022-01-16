@@ -4,7 +4,7 @@ import "server.proto";
 
 package lugo;
 
-option go_package = "github.com/lugobots/lugo4go/lugo";
+option go_package = "github.com/lugobots/lugo4go/proto";
 
 // Service to be used by clients (e.g. frontend, app, etc) to watch the match.
 service Broadcast {

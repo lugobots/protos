@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package lugo;
 
-option go_package  = "github.com/lugobots/lugo4go/lugo";
+option go_package  = "github.com/lugobots/lugo4go/proto";
 
 //Vector represent one direction on a cartesian plan
 message Vector {
