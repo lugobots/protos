@@ -47,15 +47,18 @@ message GameSetup {
     REMOTE = 2;
   }
 
-  bool dev_mode = 1;
-  StartMode start_mode = 2;
-  ListeningMode listening_mode = 3;
+  // Defines the communication protocol version between the players and the game server.
+  // The players also inform to the server what protocol they will use. If incompatible, the server will reject the player.
+  string protocol_version = 1;
+  bool dev_mode = 2;
+  StartMode start_mode = 3;
+  ListeningMode listening_mode = 4;
   // in milliseconds
-  uint32 listening_duration = 4;
-  uint32 game_duration = 5;
+  uint32 listening_duration = 5;
+  uint32 game_duration = 6;
 
-  TeamSettings home_team = 6;
-  TeamSettings away_team = 7;
+  TeamSettings home_team = 8;
+  TeamSettings away_team = 9;
 }
 
 message TeamSettings {
