@@ -4,7 +4,7 @@ import "physics.proto";
 
 package lugo;
 
-option go_package  = "github.com/lugobots/lugo4go/lugo";
+option go_package  = "github.com/lugobots/lugo4go/proto";
 
 // Service provided by the game service to the players (clients).
 service Game {

@@ -7,38 +7,42 @@
     - [EventDebugBreakpoint](#lugo.EventDebugBreakpoint)
     - [EventDebugReleased](#lugo.EventDebugReleased)
     - [EventGameOver](#lugo.EventGameOver)
+    - [EventGoal](#lugo.EventGoal)
     - [EventLostPlayer](#lugo.EventLostPlayer)
     - [EventNewPlayer](#lugo.EventNewPlayer)
     - [EventStateChange](#lugo.EventStateChange)
     - [GameEvent](#lugo.GameEvent)
+    - [GameSetup](#lugo.GameSetup)
+    - [StartRequest](#lugo.StartRequest)
+    - [TeamColor](#lugo.TeamColor)
+    - [TeamColors](#lugo.TeamColors)
+    - [TeamSettings](#lugo.TeamSettings)
+    - [WatcherRequest](#lugo.WatcherRequest)
   
     - [EventDebugBreakpoint.Breakpoint](#lugo.EventDebugBreakpoint.Breakpoint)
-  
+    - [GameSetup.ListeningMode](#lugo.GameSetup.ListeningMode)
+    - [GameSetup.StartingMode](#lugo.GameSetup.StartingMode)
   
     - [Broadcast](#lugo.Broadcast)
   
-
 - [physics.proto](#physics.proto)
     - [Point](#lugo.Point)
     - [Vector](#lugo.Vector)
     - [Velocity](#lugo.Velocity)
   
-  
-  
-  
-
 - [remote.proto](#remote.proto)
     - [BallProperties](#lugo.BallProperties)
     - [CommandResponse](#lugo.CommandResponse)
     - [GameProperties](#lugo.GameProperties)
+    - [NextOrderRequest](#lugo.NextOrderRequest)
+    - [NextTurnRequest](#lugo.NextTurnRequest)
+    - [PauseResumeRequest](#lugo.PauseResumeRequest)
     - [PlayerProperties](#lugo.PlayerProperties)
   
     - [CommandResponse.StatusCode](#lugo.CommandResponse.StatusCode)
   
-  
     - [Remote](#lugo.Remote)
   
-
 - [server.proto](#server.proto)
     - [Ball](#lugo.Ball)
     - [Catch](#lugo.Catch)
@@ -58,10 +62,8 @@
     - [OrderResponse.StatusCode](#lugo.OrderResponse.StatusCode)
     - [Team.Side](#lugo.Team.Side)
   
-  
     - [Game](#lugo.Game)
   
-
 - [Scalar Value Types](#scalar-value-types)
 
 
@@ -102,6 +104,23 @@
 
 ### EventGameOver
 Represents the event of having the game ended.
+
+
+
+
+
+
+<a name="lugo.EventGoal"></a>
+
+### EventGoal
+Represents the event of having a goal during the match
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| side | [Team.Side](#lugo.Team.Side) |  | Side of the team that changed the score.
+
+@todo implementing the player who scored. |
 
 
 
@@ -166,9 +185,112 @@ Brings the game snapshot and the event in a specialised format.
 | new_player | [EventNewPlayer](#lugo.EventNewPlayer) |  |  |
 | lost_player | [EventLostPlayer](#lugo.EventLostPlayer) |  |  |
 | state_change | [EventStateChange](#lugo.EventStateChange) |  |  |
+| goal | [EventGoal](#lugo.EventGoal) |  |  |
 | game_over | [EventGameOver](#lugo.EventGameOver) |  |  |
 | breakpoint | [EventDebugBreakpoint](#lugo.EventDebugBreakpoint) |  |  |
 | debug_released | [EventDebugReleased](#lugo.EventDebugReleased) |  |  |
+
+
+
+
+
+
+<a name="lugo.GameSetup"></a>
+
+### GameSetup
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| protocol_version | [string](#string) |  | Defines the communication protocol version between the players and the game server. The players also inform to the server what protocol they will use. If incompatible, the server will reject the player. |
+| dev_mode | [bool](#bool) |  |  |
+| start_mode | [GameSetup.StartingMode](#lugo.GameSetup.StartingMode) |  |  |
+| listening_mode | [GameSetup.ListeningMode](#lugo.GameSetup.ListeningMode) |  |  |
+| listening_duration | [uint32](#uint32) |  | in milliseconds |
+| game_duration | [uint32](#uint32) |  |  |
+| home_team | [TeamSettings](#lugo.TeamSettings) |  |  |
+| away_team | [TeamSettings](#lugo.TeamSettings) |  |  |
+
+
+
+
+
+
+<a name="lugo.StartRequest"></a>
+
+### StartRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| watcher_uuid | [string](#string) |  | Not used on localhost |
+
+
+
+
+
+
+<a name="lugo.TeamColor"></a>
+
+### TeamColor
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| red | [uint32](#uint32) |  |  |
+| green | [uint32](#uint32) |  |  |
+| blue | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="lugo.TeamColors"></a>
+
+### TeamColors
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| primary | [TeamColor](#lugo.TeamColor) |  |  |
+| secondary | [TeamColor](#lugo.TeamColor) |  |  |
+
+
+
+
+
+
+<a name="lugo.TeamSettings"></a>
+
+### TeamSettings
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  |  |
+| avatar | [string](#string) |  |  |
+| colors | [TeamColors](#lugo.TeamColors) |  |  |
+
+
+
+
+
+
+<a name="lugo.WatcherRequest"></a>
+
+### WatcherRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| uuid | [string](#string) |  | Not used on localhost |
 
 
 
@@ -184,8 +306,33 @@ Brings the game snapshot and the event in a specialised format.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| StopByOrder | 0 | Breakpoint that breaks the game before each player orders set be processed during the &#34;Playing&#34; state Each player&#39;s order set will be processed at once, so the breakpoint controls the process based on players, not on orders. |
-| StopByTurn | 1 | Breakpoint that breaks the game before each player turn be processed during the &#34;Playing&#34; state |
+| ORDERS | 0 | Breakpoint that breaks the game before each player orders set be processed during the &#34;Playing&#34; state Each player&#39;s order set will be processed at once, so the breakpoint controls the process based on players, not on orders. |
+| TURN | 1 | Breakpoint that breaks the game before each player turn be processed during the &#34;Playing&#34; state |
+
+
+
+<a name="lugo.GameSetup.ListeningMode"></a>
+
+### GameSetup.ListeningMode
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TIMER | 0 | respect the timer defined by listening duration |
+| RUSH | 1 | immediately after all orders |
+| REMOTE | 2 | wait external remote control (dev only) |
+
+
+
+<a name="lugo.GameSetup.StartingMode"></a>
+
+### GameSetup.StartingMode
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| NO_WAIT | 0 | start the game as soon as all players are connected |
+| WAIT | 1 | do not start until the master watcher request (gRPC call to Broadcast service) |
 
 
  
@@ -196,11 +343,15 @@ Brings the game snapshot and the event in a specialised format.
 <a name="lugo.Broadcast"></a>
 
 ### Broadcast
-Service to be used by clients (e.g. frontend, app, etc) to watch the match.
+Service to be consumed by clients (e.g. frontend, app, etc) to watch the match.
+The game server implements a Broadcast service. This service may help you to control or watch the game during
+training sessions.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| OnEvent | [.google.protobuf.Empty](#google.protobuf.Empty) | [GameEvent](#lugo.GameEvent) stream | Keep an open stream that publish all important events in the match. |
+| OnEvent | [WatcherRequest](#lugo.WatcherRequest) | [GameEvent](#lugo.GameEvent) stream | Keep an open stream that publish all important events in the match. |
+| GetGameSetup | [WatcherRequest](#lugo.WatcherRequest) | [GameSetup](#lugo.GameSetup) | Returns the game setup configuration. |
+| StartGame | [StartRequest](#lugo.StartRequest) | [GameSetup](#lugo.GameSetup) | StartGame allows the master watcher to start the match. See the Game Server starting mode to understand how it works. |
 
  
 
@@ -222,8 +373,8 @@ The coordinates start at the left bottom corner from the top view .
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| X | [int32](#int32) |  | Distance from the Y axis to right. |
-| Y | [int32](#int32) |  | Distance from the X axis to up. |
+| x | [int32](#int32) |  | Distance from the Y axis to right. |
+| y | [int32](#int32) |  | Distance from the X axis to up. |
 
 
 
@@ -238,8 +389,8 @@ Vector represent one direction on a cartesian plan
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| X | [double](#double) |  | Coordinate X to define the vector direction. |
-| Y | [double](#double) |  | Coordinate Y to define the vector direction. |
+| x | [double](#double) |  | Coordinate X to define the vector direction. |
+| y | [double](#double) |  | Coordinate Y to define the vector direction. |
 
 
 
@@ -287,7 +438,7 @@ It defines the velocity of an object.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Position | [Point](#lugo.Point) |  |  |
+| position | [Point](#lugo.Point) |  |  |
 | velocity | [Velocity](#lugo.Velocity) |  |  |
 | holder | [Player](#lugo.Player) |  |  |
 
@@ -325,6 +476,37 @@ It defines the velocity of an object.
 | home_score | [uint32](#uint32) |  |  |
 | away_score | [uint32](#uint32) |  |  |
 | frame_interval | [int64](#int64) |  |  |
+| shot_clock | [ShotClock](#lugo.ShotClock) |  |  |
+
+
+
+
+
+
+<a name="lugo.NextOrderRequest"></a>
+
+### NextOrderRequest
+
+
+
+
+
+
+
+<a name="lugo.NextTurnRequest"></a>
+
+### NextTurnRequest
+
+
+
+
+
+
+
+<a name="lugo.PauseResumeRequest"></a>
+
+### PauseResumeRequest
+
 
 
 
@@ -341,7 +523,7 @@ It defines the velocity of an object.
 | ----- | ---- | ----- | ----------- |
 | side | [Team.Side](#lugo.Team.Side) |  |  |
 | number | [uint32](#uint32) |  |  |
-| Position | [Point](#lugo.Point) |  |  |
+| position | [Point](#lugo.Point) |  |  |
 | velocity | [Velocity](#lugo.Velocity) |  |  |
 
 
@@ -372,13 +554,15 @@ It defines the velocity of an object.
 <a name="lugo.Remote"></a>
 
 ### Remote
-
+The game server implements a Remote service that allows you to control the game flow.
+This service may help you to control or watch the game during training sessions.
+The game server only offers this service on debug mode on.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| PauseOrResume | [.google.protobuf.Empty](#google.protobuf.Empty) | [CommandResponse](#lugo.CommandResponse) |  |
-| NextTurn | [.google.protobuf.Empty](#google.protobuf.Empty) | [CommandResponse](#lugo.CommandResponse) |  |
-| NextOrder | [.google.protobuf.Empty](#google.protobuf.Empty) | [CommandResponse](#lugo.CommandResponse) |  |
+| PauseOrResume | [PauseResumeRequest](#lugo.PauseResumeRequest) | [CommandResponse](#lugo.CommandResponse) |  |
+| NextTurn | [NextTurnRequest](#lugo.NextTurnRequest) | [CommandResponse](#lugo.CommandResponse) |  |
+| NextOrder | [NextOrderRequest](#lugo.NextOrderRequest) | [CommandResponse](#lugo.CommandResponse) |  |
 | SetBallProperties | [BallProperties](#lugo.BallProperties) | [CommandResponse](#lugo.CommandResponse) |  |
 | SetPlayerProperties | [PlayerProperties](#lugo.PlayerProperties) | [CommandResponse](#lugo.CommandResponse) |  |
 | SetGameProperties | [GameProperties](#lugo.GameProperties) | [CommandResponse](#lugo.CommandResponse) |  |
@@ -402,7 +586,7 @@ Stores all ball attributes
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Position | [Point](#lugo.Point) |  | Current position |
+| position | [Point](#lugo.Point) |  | Current position |
 | velocity | [Velocity](#lugo.Velocity) |  | Current velocity. It will be the exactly same velocity as the ball holder when a player is holding it. |
 | holder | [Player](#lugo.Player) |  | Player that is currently holding the ball. Null if the ball is not holden. |
 
@@ -436,7 +620,8 @@ GameSnapshot stores all game elements data.
 | home_team | [Team](#lugo.Team) |  | Store the home team elements. |
 | away_team | [Team](#lugo.Team) |  | Store the away team elements. |
 | ball | [Ball](#lugo.Ball) |  | Store the ball element. |
-| shot_clock | [ShotClock](#lugo.ShotClock) |  |  |
+| turns_ball_in_goal_zone | [uint32](#uint32) |  | number of turns the ball is in a goal zone |
+| shot_clock | [ShotClock](#lugo.ShotClock) |  | Store the shot clock to control ball possession limit |
 
 
 
@@ -578,7 +763,7 @@ Stores all player attributes
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | number | [uint32](#uint32) |  | Number of this player in its team (1-11) |
-| Position | [Point](#lugo.Point) |  | Current player position |
+| position | [Point](#lugo.Point) |  | Current player position |
 | velocity | [Velocity](#lugo.Velocity) |  | Current player velocity |
 | team_side | [Team.Side](#lugo.Team.Side) |  | Team side which its playing in (it&#39;s used to speed up some readings since the player element will be in a list of players of a team) |
 | init_position | [Point](#lugo.Point) |  | Default position when it&#39;s position is reset |
@@ -598,7 +783,7 @@ The team side is changed as soon a bot of the defense team catch the ball.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | team_side | [Team.Side](#lugo.Team.Side) |  | Team side of the team in attack. |
-| turns | [uint32](#uint32) |  | Remaining turns the attack team may hold the ball |
+| remaining_turns | [uint32](#uint32) |  | Remaining turns the attack team may hold the ball |
 
 
 
@@ -614,8 +799,8 @@ Stores all team elements and data.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | players | [Player](#lugo.Player) | repeated | List of player in the team |
-| Name | [string](#string) |  | Team name |
-| Score | [uint32](#uint32) |  | Team score in the present turn |
+| name | [string](#string) |  | Team name |
+| score | [uint32](#uint32) |  | Team score in the present turn |
 | side | [Team.Side](#lugo.Team.Side) |  | Side which the team is playing on. |
 
 

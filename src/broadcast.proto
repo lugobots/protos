@@ -4,17 +4,30 @@ import "server.proto";
 
 package lugo;
 
-option go_package = "github.com/lugobots/lugo4go/lugo";
+option go_package = "github.com/lugobots/lugo4go/proto";
 
-// Service to be used by clients (e.g. frontend, app, etc) to watch the match.
+// Service to be consumed by clients (e.g. frontend, app, etc) to watch the match.
+// The game server implements a Broadcast service. This service may help you to control or watch the game during
+// training sessions.
 service Broadcast {
   // Keep an open stream that publish all important events in the match.
   rpc OnEvent (WatcherRequest) returns (stream GameEvent);
+
+  // Returns the game setup configuration.
   rpc GetGameSetup (WatcherRequest) returns (GameSetup);
+
+  // StartGame allows the master watcher to start the match.
+  // See the Game Server starting mode to understand how it works.
+  rpc StartGame(StartRequest) returns (GameSetup);
+}
+message WatcherRequest {
+  // Not used on localhost
+  string uuid = 1;
 }
 
-message WatcherRequest {
-  string uuid = 1;
+message StartRequest {
+  // Not used on localhost
+  string watcher_uuid = 1;
 }
 
 // Brings the game snapshot and the event in a specialised format.
@@ -33,10 +46,11 @@ message GameEvent {
 }
 
 message GameSetup {
-  enum StartMode {
-    WAIT = 0;
-    NO_WAIT = 1;
-    DELAY = 2;
+  enum StartingMode {
+    // start the game as soon as all players are connected
+    NO_WAIT = 0;
+    // do not start until the master watcher request (gRPC call to Broadcast service)
+    WAIT = 1;
   }
   enum ListeningMode {
     // respect the timer defined by listening duration
@@ -47,15 +61,18 @@ message GameSetup {
     REMOTE = 2;
   }
 
-  bool dev_mode = 1;
-  StartMode start_mode = 2;
-  ListeningMode listening_mode = 3;
+  // Defines the communication protocol version between the players and the game server.
+  // The players also inform to the server what protocol they will use. If incompatible, the server will reject the player.
+  string protocol_version = 1;
+  bool dev_mode = 2;
+  StartingMode start_mode = 3;
+  ListeningMode listening_mode = 4;
   // in milliseconds
-  uint32 listening_duration = 4;
-  uint32 game_duration = 5;
+  uint32 listening_duration = 5;
+  uint32 game_duration = 6;
 
-  TeamSettings home_team = 6;
-  TeamSettings away_team = 7;
+  TeamSettings home_team = 8;
+  TeamSettings away_team = 9;
 }
 
 message TeamSettings {
