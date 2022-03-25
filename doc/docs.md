@@ -13,6 +13,7 @@
     - [EventStateChange](#lugo.EventStateChange)
     - [GameEvent](#lugo.GameEvent)
     - [GameSetup](#lugo.GameSetup)
+    - [StartRequest](#lugo.StartRequest)
     - [TeamColor](#lugo.TeamColor)
     - [TeamColors](#lugo.TeamColors)
     - [TeamSettings](#lugo.TeamSettings)
@@ -20,7 +21,7 @@
   
     - [EventDebugBreakpoint.Breakpoint](#lugo.EventDebugBreakpoint.Breakpoint)
     - [GameSetup.ListeningMode](#lugo.GameSetup.ListeningMode)
-    - [GameSetup.StartMode](#lugo.GameSetup.StartMode)
+    - [GameSetup.StartingMode](#lugo.GameSetup.StartingMode)
   
     - [Broadcast](#lugo.Broadcast)
   
@@ -204,12 +205,27 @@ Brings the game snapshot and the event in a specialised format.
 | ----- | ---- | ----- | ----------- |
 | protocol_version | [string](#string) |  | Defines the communication protocol version between the players and the game server. The players also inform to the server what protocol they will use. If incompatible, the server will reject the player. |
 | dev_mode | [bool](#bool) |  |  |
-| start_mode | [GameSetup.StartMode](#lugo.GameSetup.StartMode) |  |  |
+| start_mode | [GameSetup.StartingMode](#lugo.GameSetup.StartingMode) |  |  |
 | listening_mode | [GameSetup.ListeningMode](#lugo.GameSetup.ListeningMode) |  |  |
 | listening_duration | [uint32](#uint32) |  | in milliseconds |
 | game_duration | [uint32](#uint32) |  |  |
 | home_team | [TeamSettings](#lugo.TeamSettings) |  |  |
 | away_team | [TeamSettings](#lugo.TeamSettings) |  |  |
+
+
+
+
+
+
+<a name="lugo.StartRequest"></a>
+
+### StartRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| watcher_uuid | [string](#string) |  |  |
 
 
 
@@ -308,16 +324,15 @@ Brings the game snapshot and the event in a specialised format.
 
 
 
-<a name="lugo.GameSetup.StartMode"></a>
+<a name="lugo.GameSetup.StartingMode"></a>
 
-### GameSetup.StartMode
+### GameSetup.StartingMode
 
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| WAIT | 0 |  |
-| NO_WAIT | 1 |  |
-| DELAY | 2 |  |
+| NO_WAIT | 0 | start the game as soon as all players are connected |
+| WAIT | 1 | do not start until the master watcher request (gRPC call to Broadcast service) |
 
 
  
@@ -334,6 +349,7 @@ Service to be used by clients (e.g. frontend, app, etc) to watch the match.
 | ----------- | ------------ | ------------- | ------------|
 | OnEvent | [WatcherRequest](#lugo.WatcherRequest) | [GameEvent](#lugo.GameEvent) stream | Keep an open stream that publish all important events in the match. |
 | GetGameSetup | [WatcherRequest](#lugo.WatcherRequest) | [GameSetup](#lugo.GameSetup) |  |
+| StartGame | [StartRequest](#lugo.StartRequest) | [GameSetup](#lugo.GameSetup) | StartGame allows the master watcher to start the match |
 
  
 
