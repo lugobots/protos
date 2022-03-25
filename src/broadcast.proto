@@ -11,10 +11,17 @@ service Broadcast {
   // Keep an open stream that publish all important events in the match.
   rpc OnEvent (WatcherRequest) returns (stream GameEvent);
   rpc GetGameSetup (WatcherRequest) returns (GameSetup);
+
+  // StartGame allows the master watcher to start the match
+  rpc StartGame(StartRequest) returns (GameSetup);
 }
 
 message WatcherRequest {
   string uuid = 1;
+}
+
+message StartRequest {
+  string watcher_uuid = 1;
 }
 
 // Brings the game snapshot and the event in a specialised format.
@@ -33,10 +40,11 @@ message GameEvent {
 }
 
 message GameSetup {
-  enum StartMode {
-    WAIT = 0;
-    NO_WAIT = 1;
-    DELAY = 2;
+  enum StartingMode {
+    // start the game as soon as all players are connected
+    NO_WAIT = 0;
+    // do not start until the master watcher request (gRPC call to Broadcast service)
+    WAIT = 1;
   }
   enum ListeningMode {
     // respect the timer defined by listening duration
@@ -51,7 +59,7 @@ message GameSetup {
   // The players also inform to the server what protocol they will use. If incompatible, the server will reject the player.
   string protocol_version = 1;
   bool dev_mode = 2;
-  StartMode start_mode = 3;
+  StartingMode start_mode = 3;
   ListeningMode listening_mode = 4;
   // in milliseconds
   uint32 listening_duration = 5;
