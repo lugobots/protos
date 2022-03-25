@@ -225,7 +225,7 @@ Brings the game snapshot and the event in a specialised format.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| watcher_uuid | [string](#string) |  |  |
+| watcher_uuid | [string](#string) |  | Not used on localhost |
 
 
 
@@ -290,7 +290,7 @@ Brings the game snapshot and the event in a specialised format.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| uuid | [string](#string) |  |  |
+| uuid | [string](#string) |  | Not used on localhost |
 
 
 
@@ -343,13 +343,15 @@ Brings the game snapshot and the event in a specialised format.
 <a name="lugo.Broadcast"></a>
 
 ### Broadcast
-Service to be used by clients (e.g. frontend, app, etc) to watch the match.
+Service to be consumed by clients (e.g. frontend, app, etc) to watch the match.
+The game server implements a Broadcast service. This service may help you to control or watch the game during
+training sessions.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | OnEvent | [WatcherRequest](#lugo.WatcherRequest) | [GameEvent](#lugo.GameEvent) stream | Keep an open stream that publish all important events in the match. |
-| GetGameSetup | [WatcherRequest](#lugo.WatcherRequest) | [GameSetup](#lugo.GameSetup) |  |
-| StartGame | [StartRequest](#lugo.StartRequest) | [GameSetup](#lugo.GameSetup) | StartGame allows the master watcher to start the match |
+| GetGameSetup | [WatcherRequest](#lugo.WatcherRequest) | [GameSetup](#lugo.GameSetup) | Returns the game setup configuration. |
+| StartGame | [StartRequest](#lugo.StartRequest) | [GameSetup](#lugo.GameSetup) | StartGame allows the master watcher to start the match. See the Game Server starting mode to understand how it works. |
 
  
 
@@ -552,7 +554,9 @@ It defines the velocity of an object.
 <a name="lugo.Remote"></a>
 
 ### Remote
-
+The game server implements a Remote service that allows you to control the game flow.
+This service may help you to control or watch the game during training sessions.
+The game server only offers this service on debug mode on.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|

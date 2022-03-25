@@ -7,6 +7,9 @@ package lugo;
 
 option go_package  = "github.com/lugobots/lugo4go/proto";
 
+// The game server implements a Remote service that allows you to control the game flow.
+// This service may help you to control or watch the game during training sessions.
+// The game server only offers this service on debug mode on.
 service Remote {
     rpc PauseOrResume (PauseResumeRequest) returns (CommandResponse);
     rpc NextTurn (NextTurnRequest) returns (CommandResponse);
