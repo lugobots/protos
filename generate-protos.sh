@@ -7,7 +7,7 @@ SRC_DIR=$(pwd)/src
 DST_DIR=$(pwd)/proto
 
 
-GENERATOR_IMG="jaegertracing/protobuf:0.3.1"
+GENERATOR_IMG="protoc6:latest"
 
 echo -n "Lugo - Generating Go protos: "
 mkdir -p proto/go
@@ -28,8 +28,7 @@ docker run --rm -u $(id -u)  \
     -w/source $GENERATOR_IMG  \
       --proto_path=/source \
       --js_out=import_style=commonjs,binary:/output  \
-      --grpc_out=minimum_node_version=8:/output \
-      --plugin=protoc-gen-grpc=/usr/bin/grpc_node_plugin \
+      --grpc-web_out=import_style=typescript,mode=grpcweb:/output  \
       -I/usr/include/google/protobuf  \
       /source/* && echo "OK!" || echo ""
 
