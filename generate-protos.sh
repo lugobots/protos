@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo -n "Cleaning out old files"
-rm -rf protos/*/* && echo "" || exit 1
+rm -rf proto/*/* && echo "" || exit 1
 
 SRC_DIR=$(pwd)/src
 DST_DIR=$(pwd)/proto
@@ -29,7 +29,7 @@ docker run --rm -u $(id -u)  \
     -v${DST_DIR}/js:/output \
     -w/source $GENERATOR_IMG  \
       --proto_path=/source \
-      --js_out=import_style=commonjs,binary:/output  \
+      --js_out=import_style=typescript,binary:/output  \
       --grpc_out=minimum_node_version=8:/output \
       --plugin=protoc-gen-grpc=/usr/bin/grpc_node_plugin \
       -I/usr/include/google/protobuf  \
@@ -39,7 +39,7 @@ echo -n "Lugo - Generating Typescript typing: "
 # TODO passing `/source/*` instead of all files. For some reason it is failing
 docker run --init --rm -u $(id -u) \
       -v${SRC_DIR}:/source  \
-      -v${DST_DIR}:/output \
+      -v${DST_DIR}/js:/output \
       -w/source $TS_GEN_IMG \
       protoc \
       --proto_path=/source \
