@@ -40,10 +40,10 @@ echo -n "Lugo - Generating Typescript typing: "
 mkdir -p proto/ts
 docker run --init --rm -u $(id -u) \
       -v ${SRC_DIR}:/base/src \
-      -v ${DST_DIR}/ts:/base/proto/js \
-      -w /base/src $TS_GEN_IMG protoc \
+      -v ${DST_DIR}/ts:/base/proto/ts \
+      -w /base/src $TS_GEN_IMG grpc_tools_node_protoc \
       --plugin=protoc-gen-ts=/bin/grpc_tools_node_protoc \
-      --ts_out=/base/proto/js \
+      --ts_out=grpc_js:/base/proto/ts \
       -I/base/src broadcast.proto server.proto remote.proto physics.proto  && echo "OK!" || echo ""
 
 
