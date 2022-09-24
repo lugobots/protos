@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo -n "Cleaning out old files"
-rm -rf proto/*/* && echo "" || exit 1
+rm -rf proto/* && echo "" || exit 1
 
 SRC_DIR=$(pwd)/src
 DST_DIR=$(pwd)/proto
@@ -9,7 +9,9 @@ DST_DIR=$(pwd)/proto
 TS_GEN_IMG="ts_typing_maker"
 docker build -t ${TS_GEN_IMG} -f TypescriptTypingGen.Dockerfile .
 
-GENERATOR_IMG="jaegertracing/protobuf:0.3.1"
+# Build the image jaegertracing/protobuf:0.3.1 project with this command:
+# docker build -t jaegertracing_updated --build-arg GRPC_VERSION=1.48.0 .
+GENERATOR_IMG="jaegertracing_updated"
 
 echo -n "Lugo - Generating Go protos: "
 mkdir -p proto/go
@@ -24,28 +26,26 @@ docker run --rm -u $(id -u)  \
 
 echo -n "Lugo - Generating JS protos: "
 mkdir -p proto/js
-docker run --rm -u $(id -u)  \
-    -v${SRC_DIR}:/source  \
-    -v${DST_DIR}/js:/output \
-    -w/source $GENERATOR_IMG  \
-      --proto_path=/source \
-      --js_out=import_style=typescript,binary:/output  \
-      --grpc_out=minimum_node_version=8:/output \
-      --plugin=protoc-gen-grpc=/usr/bin/grpc_node_plugin \
-      -I/usr/include/google/protobuf  \
-      /source/* && echo "OK!" || echo ""
+docker run --init --rm -u $(id -u) \
+      -v ${SRC_DIR}:/base/src \
+      -v ${DST_DIR}/js:/base/proto/js \
+      -w /base/src $TS_GEN_IMG grpc_tools_node_protoc \
+      --grpc_out=grpc_js:/base/proto/js \
+      --js_out=import_style=commonjs,binary:/base/proto/js  \
+      -I/base/src broadcast.proto server.proto remote.proto physics.proto  && echo "OK!" || echo ""
+
+
 
 echo -n "Lugo - Generating Typescript typing: "
-# TODO passing `/source/*` instead of all files. For some reason it is failing
+mkdir -p proto/ts
 docker run --init --rm -u $(id -u) \
-      -v${SRC_DIR}:/source  \
-      -v${DST_DIR}/js:/output \
-      -w/source $TS_GEN_IMG \
-      protoc \
-      --proto_path=/source \
-    --plugin=protoc-gen-ts=/bin/grpc_tools_node_protoc \
-    --ts_out=/output \
-    -I/source broadcast.proto server.proto remote.proto physics.proto && echo "OK!" || echo ""
+      -v ${SRC_DIR}:/base/src \
+      -v ${DST_DIR}/ts:/base/proto/ts \
+      -w /base/src $TS_GEN_IMG grpc_tools_node_protoc \
+      --plugin=protoc-gen-ts=/bin/grpc_tools_node_protoc \
+      --ts_out=grpc_js:/base/proto/ts \
+      -I/base/src broadcast.proto server.proto remote.proto physics.proto  && echo "OK!" || echo ""
+
 
 echo -n "Lugo - Generating Python protos: "
 mkdir -p proto/python
