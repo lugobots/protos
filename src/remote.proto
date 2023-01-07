@@ -17,6 +17,7 @@ service Remote {
     rpc SetBallProperties (BallProperties) returns (CommandResponse);
     rpc SetPlayerProperties (PlayerProperties) returns (CommandResponse);
     rpc SetGameProperties (GameProperties) returns (CommandResponse);
+    rpc ResumeListeningPhase (ResumeListeningRequest) returns (ResumeListeningResponse);
 }
 
 message PauseResumeRequest {
@@ -58,3 +59,7 @@ message CommandResponse {
     GameSnapshot game_snapshot = 2;
     string details = 3;
 }
+
+
+message ResumeListeningRequest{}
+message ResumeListeningResponse{}
