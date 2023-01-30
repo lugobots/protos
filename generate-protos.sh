@@ -9,9 +9,7 @@ DST_DIR=$(pwd)/proto
 TS_GEN_IMG="ts_typing_maker"
 docker build -t ${TS_GEN_IMG} -f TypescriptTypingGen.Dockerfile .
 
-# Build the image jaegertracing/protobuf:0.3.1 project with this command:
-# docker build -t jaegertracing_updated --build-arg GRPC_VERSION=1.48.0 .
-GENERATOR_IMG="jaegertracing_updated"
+GENERATOR_IMG="lugobots/proto-gen:v1"
 
 echo -n "Lugo - Generating Go protos: "
 mkdir -p proto/go
