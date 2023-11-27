@@ -66,3 +66,8 @@ docker run -it -v $(pwd):/base ts_typing_maker protoc \
 ```
 
 These commands are also included in the `./generate-protos.sh` script.
+
+
+# Python intellisense support
+
+https://youtrack.jetbrains.com/issue/PY-27111/Please-add-protobuf-autocompletion-support.

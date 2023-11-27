@@ -22,6 +22,12 @@ docker run --rm -u $(id -u)  \
       -I/usr/include/google/protobuf  \
       /source/* && echo "OK!" || echo ""
 
+
+docker run --rm -v $(pwd)/src:/source -v $(pwd)/proto/cpp:/output  -w/source lugobots/proto-gen:v1 --proto_path=/source --cpp_out=/output -I/usr/include/google/protobuf /source/*
+docker run --rm -v $(pwd)/src:/source -v $(pwd)/proto/cpp:/output  -w/source lugobots/proto-gen:v1 --proto_path=/source --grpc_out=/output --plugin=protoc-gen-grpc=/usr/bin/grpc_cpp_plugin -I/usr/include/google/protobuf /source/*
+
+
+
 echo -n "Lugo - Generating JS protos: "
 mkdir -p proto/js
 docker run --init --rm -u $(id -u) \
