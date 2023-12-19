@@ -869,6 +869,7 @@ Stores all player attributes
 | velocity | [Velocity](#lugo-Velocity) |  | Current player velocity |
 | team_side | [Team.Side](#lugo-Team-Side) |  | Team side which its playing in (it&#39;s used to speed up some readings since the player element will be in a list of players of a team) |
 | init_position | [Point](#lugo-Point) |  | Default position when it&#39;s position is reset |
+| is_jumping | [bool](#bool) |  | indicates the the player is jumping (goalkeepers only) |
 
 
 
