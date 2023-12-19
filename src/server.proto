@@ -118,6 +118,8 @@ message Player {
     Team.Side team_side = 4;
     // Default position when it's position is reset
     Point init_position = 5;
+    // indicates the the player is jumping (goalkeepers only)
+    bool is_jumping = 6;
 }
 
 // Stores all ball attributes
