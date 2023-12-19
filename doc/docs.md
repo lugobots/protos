@@ -683,14 +683,14 @@ The game server only offers this service on debug mode on.
 <a name="lugo-Ball"></a>
 
 ### Ball
-Stores all ball attributes
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| position | [Point](#lugo-Point) |  | Current position |
-| velocity | [Velocity](#lugo-Velocity) |  | Current velocity. It will be the exactly same velocity as the ball holder when a player is holding it. |
-| holder | [Player](#lugo-Player) |  | Player that is currently holding the ball. Null if the ball is not holden. |
+| position | [Point](#lugo-Point) |  |  |
+| velocity | [Velocity](#lugo-Velocity) |  |  |
+| holder | [Player](#lugo-Player) |  |  |
 
 
 
@@ -700,9 +700,7 @@ Stores all ball attributes
 <a name="lugo-Catch"></a>
 
 ### Catch
-Order to try to catch the ball. The player can only catch the ball when the player is touching the ball.
-Only one catching order can be executed in a turn. So, if more than one player try to catch the ball in the same
-turn, the first processed catch order will succeed, and the next ones will fail.
+
 
 
 
@@ -712,18 +710,18 @@ turn, the first processed catch order will succeed, and the next ones will fail.
 <a name="lugo-GameSnapshot"></a>
 
 ### GameSnapshot
-GameSnapshot stores all game elements data.
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| state | [GameSnapshot.State](#lugo-GameSnapshot-State) |  | The game state defines which phase the game is. The phase determine what the server is doing, are going to do, or what it is waiting for. |
-| turn | [uint32](#uint32) |  | Turns counter. It starts from 1, but before the match starts, it may be zero. |
-| home_team | [Team](#lugo-Team) |  | Store the home team elements. |
-| away_team | [Team](#lugo-Team) |  | Store the away team elements. |
-| ball | [Ball](#lugo-Ball) |  | Store the ball element. |
-| turns_ball_in_goal_zone | [uint32](#uint32) |  | number of turns the ball is in a goal zone |
-| shot_clock | [ShotClock](#lugo-ShotClock) |  | Store the shot clock to control ball possession limit |
+| state | [GameSnapshot.State](#lugo-GameSnapshot-State) |  |  |
+| turn | [uint32](#uint32) |  |  |
+| home_team | [Team](#lugo-Team) |  |  |
+| away_team | [Team](#lugo-Team) |  |  |
+| ball | [Ball](#lugo-Ball) |  |  |
+| turns_ball_in_goal_zone | [uint32](#uint32) |  |  |
+| shot_clock | [ShotClock](#lugo-ShotClock) |  |  |
 
 
 
@@ -733,16 +731,16 @@ GameSnapshot stores all game elements data.
 <a name="lugo-JoinRequest"></a>
 
 ### JoinRequest
-JoinRequest define the player configuration to the game.
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| token | [string](#string) |  | Only used in official matches to guarantee that only one process will assume that player position (team and number). The bot process will receive this token as an argument, and must send it to the server in this message. |
-| protocol_version | [string](#string) |  | Identifies the protocol version of the bot. |
-| team_side | [Team.Side](#lugo-Team-Side) |  | Identify the bot&#39;s team side (Team_Home or Team_Away) |
-| number | [uint32](#uint32) |  | Player&#39;s number 1-11 |
-| init_position | [Point](#lugo-Point) |  | Position where the player must be set at &#34;GetReady&#34; state (at beginning of the match or after a goal) |
+| token | [string](#string) |  |  |
+| protocol_version | [string](#string) |  |  |
+| team_side | [Team.Side](#lugo-Team-Side) |  |  |
+| number | [uint32](#uint32) |  |  |
+| init_position | [Point](#lugo-Point) |  |  |
 
 
 
@@ -752,14 +750,12 @@ JoinRequest define the player configuration to the game.
 <a name="lugo-Jump"></a>
 
 ### Jump
-Changes the goalkeepers velocity in a higher speed.
-The goalkeepers may move kicker than other players when they jump, however the jump movement cannot be interrupted
-after triggered. (read specs to find out the number of turns the jump lasts)
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| velocity | [Velocity](#lugo-Velocity) |  | Goalkeeper&#39;s velocity during the jump. |
+| velocity | [Velocity](#lugo-Velocity) |  |  |
 
 
 
@@ -769,18 +765,12 @@ after triggered. (read specs to find out the number of turns the jump lasts)
 <a name="lugo-Kick"></a>
 
 ### Kick
-The kick order is only executed by the ball holder, and it is processed immediately.
-Important: The kick velocity is summed to the current ball velocity.
-The kick speed will suffer a power reduction proportionally to the player direction when the kick is not in the
-same direction of the player direction. The reduction is calculated based on the angle with the player direction
-using the formula `SpeedReducerFactor = 0.5 &#43; (0.5 * ((180 - ang) / 180))`
-In summary, the speed will by reduced proportionally to the angle from 100% at 0 degrees until the limit of
-50% at 180 degrees.
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| velocity | [Velocity](#lugo-Velocity) |  | Kick velocity (it won&#39;t be necessarily the final ball velocity) |
+| velocity | [Velocity](#lugo-Velocity) |  |  |
 
 
 
@@ -790,15 +780,12 @@ In summary, the speed will by reduced proportionally to the angle from 100% at 0
 <a name="lugo-Move"></a>
 
 ### Move
-Order to ask the server to change the player velocity (direction and speed).
-This order replaces the current player velocity, and the new velocity attribute will be immediately processed
-in that turn. There is a limit speed to the player. The server will cap the velocity if the request is higher than
-the limit.
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| velocity | [Velocity](#lugo-Velocity) |  | The nex Velocity |
+| velocity | [Velocity](#lugo-Velocity) |  |  |
 
 
 
@@ -808,7 +795,7 @@ the limit.
 <a name="lugo-Order"></a>
 
 ### Order
-Order to the game server. To be sent by players during the Listening phase.
+
 
 
 | Field | Type | Label | Description |
@@ -826,13 +813,13 @@ Order to the game server. To be sent by players during the Listening phase.
 <a name="lugo-OrderResponse"></a>
 
 ### OrderResponse
-Message sent to the player as a response after sending a order set to the the server.
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| code | [OrderResponse.StatusCode](#lugo-OrderResponse-StatusCode) |  | Define if the order will be correctly processed. |
-| details | [string](#string) |  | String message used for debugging proposes. |
+| code | [OrderResponse.StatusCode](#lugo-OrderResponse-StatusCode) |  |  |
+| details | [string](#string) |  |  |
 
 
 
@@ -842,14 +829,14 @@ Message sent to the player as a response after sending a order set to the the se
 <a name="lugo-OrderSet"></a>
 
 ### OrderSet
-Message containing the orders the player want to send to the server in that turn.
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| turn | [uint32](#uint32) |  | Turn which this order set should be processed at. |
-| orders | [Order](#lugo-Order) | repeated | List of orders in the expected order of execution |
-| debug_message | [string](#string) |  | String message used for debugging proposes. |
+| turn | [uint32](#uint32) |  |  |
+| orders | [Order](#lugo-Order) | repeated |  |
+| debug_message | [string](#string) |  |  |
 
 
 
@@ -859,16 +846,17 @@ Message containing the orders the player want to send to the server in that turn
 <a name="lugo-Player"></a>
 
 ### Player
-Stores all player attributes
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| number | [uint32](#uint32) |  | Number of this player in its team (1-11) |
-| position | [Point](#lugo-Point) |  | Current player position |
-| velocity | [Velocity](#lugo-Velocity) |  | Current player velocity |
-| team_side | [Team.Side](#lugo-Team-Side) |  | Team side which its playing in (it&#39;s used to speed up some readings since the player element will be in a list of players of a team) |
-| init_position | [Point](#lugo-Point) |  | Default position when it&#39;s position is reset |
+| number | [uint32](#uint32) |  |  |
+| position | [Point](#lugo-Point) |  |  |
+| velocity | [Velocity](#lugo-Velocity) |  |  |
+| team_side | [Team.Side](#lugo-Team-Side) |  |  |
+| init_position | [Point](#lugo-Point) |  |  |
+| is_jumping | [bool](#bool) |  | indicates the the player is jumping (goalkeepers only) |
 
 
 
@@ -878,14 +866,13 @@ Stores all player attributes
 <a name="lugo-ShotClock"></a>
 
 ### ShotClock
-Stores the side of the team in attack and the time remaining holding the ball.
-The team side is changed as soon a bot of the defense team catch the ball.
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| team_side | [Team.Side](#lugo-Team-Side) |  | Team side of the team in attack. |
-| remaining_turns | [uint32](#uint32) |  | Remaining turns the attack team may hold the ball |
+| team_side | [Team.Side](#lugo-Team-Side) |  |  |
+| remaining_turns | [uint32](#uint32) |  |  |
 
 
 
@@ -895,15 +882,15 @@ The team side is changed as soon a bot of the defense team catch the ball.
 <a name="lugo-Team"></a>
 
 ### Team
-Stores all team elements and data.
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| players | [Player](#lugo-Player) | repeated | List of player in the team |
-| name | [string](#string) |  | Team name |
-| score | [uint32](#uint32) |  | Team score in the present turn |
-| side | [Team.Side](#lugo-Team-Side) |  | Side which the team is playing on. |
+| players | [Player](#lugo-Player) | repeated |  |
+| name | [string](#string) |  |  |
+| score | [uint32](#uint32) |  |  |
+| side | [Team.Side](#lugo-Team-Side) |  |  |
 
 
 
@@ -919,12 +906,12 @@ Stores all team elements and data.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| WAITING | 0 | The game is waiting for all players be connected. There is a configurable time limit to wait for players. After this limit expires, the match is considered over. |
-| GET_READY | 1 | The game resets the players position to start the match or to restart the match after a goal. |
-| LISTENING | 2 | The game is waiting for players orders. There is a configurable time window for this phase. After the time limit expires, the server will ignore the missing orders and process the ones it got. (when running on dev mode, the server may allow different behaviours) |
-| PLAYING | 3 | The game is executing the players&#39; orders in the same sequence they were gotten. If the ball is NOT been holden, its velocity will be processed first. Otherwise, it position will be updated when the ball holder movement be processed. If there is no movement orders from a player, but it has speed greater than 0, it will be processed after all its orders are processed. Each player orders will be processed in the same sequence they were included in the message (e.g. first move, than kick) The ball kick is processed immediately after the order (the ball position is updated as its new velocity after the kick) |
-| SHIFTING | 4 | The game interrupt the match to shift the ball possession. It happens only when the shot time is over (see shot_clock property). The ball will be given to the goalkeeper of the defense team, and the next state will &#34;listening&#34;, so the bots will not have time to rearrange before the next turn. |
-| OVER | 99 | The game may be over after any phase. It can be over after Waiting if there is no players connected after the time limit for connections It can be over after GetReady or Listening if there is no enough players (e.g. connection lost) And it also can be over after Playing state if that was the last turn of the match. |
+| WAITING | 0 |  |
+| GET_READY | 1 |  |
+| LISTENING | 2 |  |
+| PLAYING | 3 |  |
+| SHIFTING | 4 |  |
+| OVER | 99 |  |
 
 
 
@@ -950,8 +937,8 @@ Stores all team elements and data.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| HOME | 0 | Team playing on the left side of field |
-| AWAY | 1 | Team playing on the right side of the field |
+| HOME | 0 |  |
+| AWAY | 1 |  |
 
 
  
@@ -962,12 +949,12 @@ Stores all team elements and data.
 <a name="lugo-Game"></a>
 
 ### Game
-Service provided by the game service to the players (clients).
+
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| JoinATeam | [JoinRequest](#lugo-JoinRequest) | [GameSnapshot](#lugo-GameSnapshot) stream | JoinATeam allows the player to listen the server during the match. |
-| SendOrders | [OrderSet](#lugo-OrderSet) | [OrderResponse](#lugo-OrderResponse) | SendOrders allows the player to send others to the server when the game is on listening state. |
+| JoinATeam | [JoinRequest](#lugo-JoinRequest) | [GameSnapshot](#lugo-GameSnapshot) stream |  |
+| SendOrders | [OrderSet](#lugo-OrderSet) | [OrderResponse](#lugo-OrderResponse) |  |
 
  
 

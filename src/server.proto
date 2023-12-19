@@ -59,6 +59,8 @@ message Player {
   Velocity velocity = 3;
   Team.Side team_side = 4;
   Point init_position = 5;
+  // indicates the the player is jumping (goalkeepers only)
+  bool is_jumping = 6;
 }
 
 message Ball {
