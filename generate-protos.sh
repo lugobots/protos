@@ -30,7 +30,7 @@ docker run --rm -v $(pwd)/src:/source -v $(pwd)/proto/cpp:/output  -w/source lug
 
 echo -n "Lugo - Generating JS protos: "
 mkdir -p proto/js
-docker run --init --rm -u $(id -u) \
+docker run --init --rm \
       -v ${SRC_DIR}:/base/src \
       -v ${DST_DIR}/js:/base/proto/js \
       -w /base/src $TS_GEN_IMG grpc_tools_node_protoc \
@@ -42,7 +42,7 @@ docker run --init --rm -u $(id -u) \
 
 echo -n "Lugo - Generating Typescript typing: "
 mkdir -p proto/ts
-docker run --init --rm -u $(id -u) \
+docker run --init --rm  \
       -v ${SRC_DIR}:/base/src \
       -v ${DST_DIR}/ts:/base/proto/ts \
       -w /base/src $TS_GEN_IMG grpc_tools_node_protoc \
