@@ -121,6 +121,32 @@ message EventGoal {
 
 // Represents the event of having the game ended.
 message EventGameOver {
+  enum EndingReason {
+    // Normal ending, the game ran until the end of the expected number of turns
+    TIME_IS_OVER = 0;
+    // The game did not start. One of the teams or both teams do not have 11 bots connected
+    WAITING_EXPIRED = 1;
+    // The game was interrupted because too many bots of at least one team disconnected.
+    NO_ENOUGH_PLAYER = 2;
+    // The game was interrupted by an external command (it was stopped)
+    EXTERNAL_REQUEST = 3;
+    // The game was interrupted because the score difference is too large to the remaining time.
+    // Blame the knocked out team
+    KNOCKOUT = 4;
+  }
+
+  enum BlameStop {
+    NORMAL = 0;
+    BOTH_TEAMS = 1;
+    HOME_TEAM = 2;
+    AWAY_TEAM = 3;
+  }
+
+  // Reason for the end of the game
+  EndingReason reason = 1;
+
+  // Which team was responsible to cause the game to be interrupted
+  BlameStop blame = 2;
 }
 
 // (only available dev mode) Represents the event of having a breakpoint reached.
