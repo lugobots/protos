@@ -19,6 +19,7 @@ service Remote {
     rpc SetGameProperties (GameProperties) returns (CommandResponse);
     rpc ResumeListeningPhase (ResumeListeningRequest) returns (ResumeListeningResponse);
     rpc ResetPlayerPositions (ResetPlayerPositionsRequest) returns (ResetPlayerPositionsResponse);
+    rpc ResetGame (ResetGameRequest) returns (CommandResponse);
     rpc GetGameSnapshot (GameSnapshotRequest) returns (GameSnapshotResponse);
 }
 
@@ -67,6 +68,7 @@ message ResumeListeningRequest{}
 message ResumeListeningResponse{}
 
 message ResetPlayerPositionsRequest{}
+message ResetGameRequest{}
 message ResetPlayerPositionsResponse{
     GameSnapshot game_snapshot = 1;
 }

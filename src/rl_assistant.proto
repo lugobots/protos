@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package lugo;
+import "server.proto";
+option go_package  = "github.com/lugobots/lugo4go/proto";
+
+
+service RLAssistant {
+  // StartSession will create 11 player connections on each team and wait the game to be on the waiting status
+  // It will return a stream of game snapshots, like "Game.JoinATeam" does, but these GameSnapshot will be the
+  // same one returned by SendPlayersOrders. But you need to keep the stream open, otherwise the server will
+  // consider that the session is done.
+  rpc StartSession (RLSessionConfig) returns (stream GameSnapshot);
+  // SendPlayersOrders will send all payers orders, and ignore the ones that do not have orders
+  // If there is no order from a player, it will behave are defined in PlayersOrders.default_behaviour.
+  // The valid values for default_behaviour are defined by the server. Please run the server help command
+  // for more information.
+  rpc SendPlayersOrders (PlayersOrders) returns (TurnOutcome);
+  // The training environment will need to reset the game status multiple times during the training session.
+  // Each time this occurs, the RL assistant must be notified by the trainer, as the game server does not emit any
+  // related events.
+  // When the environment is reset, the RL assistant will also reset its controllers to maintain synchronization with
+  // the game server.
+  rpc ResetEnv (RLResetConfig) returns (TurnOutcome);
+}
+
+message RLSessionConfig {
+  // nothing for now
+}
+
+message PlayerOrdersOnRLSession {
+  // Identify the bot's team side (Team_Home or Team_Away)
+  Team.Side team_side = 1;
+  // Player's number 1-11
+  uint32 number = 2;
+  // if  behaviour is not set, the orders will be executed
+  string behaviour = 3;
+
+  repeated Order orders = 4;
+}
+
+message PlayersOrders {
+  string default_behaviour = 1;
+  repeated PlayerOrdersOnRLSession players_orders = 2;
+}
+
+message TurnOutcome {
+  GameSnapshot game_snapshot = 1;
+  bool score_changed = 2;
+  bool shot_clock_expired = 3;
+  bool goal_zone_timer_expired = 4;
+}
+
+message RLResetConfig {
+  // nothing for now
+}
