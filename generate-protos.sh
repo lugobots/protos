@@ -9,20 +9,27 @@ DST_DIR=$(pwd)/proto
 TS_GEN_IMG="ts_typing_maker"
 #docker build -t ${TS_GEN_IMG} -f TypescriptTypingGen.Dockerfile .
 
-GENERATOR_IMG="bosta"
+GENERATOR_IMG="grpc_builder"
 
-echo -n "Lugo - Generating Go protos: "
+echo -n "Lugo - Generating Go protos Messages: "
 mkdir -p proto/go
-docker run --rm -u $(id -u)  \
-    -v${SRC_DIR}:/source  \
-    -v${DST_DIR}/go:/output \
-    -w/source $GENERATOR_IMG  \
-      protoc --proto_path=/source \
-      --go_out=paths=source_relative,plugins=grpc:/output \
+docker run --rm  \
+    -v ${SRC_DIR}:/source  \
+    -v ${DST_DIR}/go:/output \
+    -w/source grpc_builder  /bin/bash -c \
+      "protoc --proto_path=/source \
+      --go_out=paths=source_relative:/output \
       -I/usr/include/google/protobuf  \
-      /source/* && echo "OK!" || echo ""
-
-
+      /source/*" && echo "OK!" || echo ""
+echo -n "Lugo - Generating Go protos Services: "
+docker run --rm  \
+    -v ${SRC_DIR}:/source  \
+    -v ${DST_DIR}/go:/output \
+    -w/source grpc_builder  /bin/bash -c \
+      "protoc --proto_path=/source \
+      --go-grpc_out=paths=source_relative:/output \
+      -I/usr/include/google/protobuf  \
+      /source/*" && echo "OK!" || echo ""
 
 #
 #docker run --rm -v $(pwd)/src:/source -v $(pwd)/proto/cpp:/output  -w/source lugobots/proto-gen:v1 --proto_path=/source --cpp_out=/output -I/usr/include/google/protobuf /source/*

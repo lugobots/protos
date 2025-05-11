@@ -6,7 +6,7 @@ FROM debian:12.10-slim
 #pip3 install --no-cache-dir  --force-reinstall -Iv grpcio==1.71
 #python -m pip install grpcio-tools
 #python -m grpc_tools.protoc -I./ --python_out=. --pyi_out=. --grpc_python_out=. test.proto
-FROM debian:12.10-slim
+#FROM debian:12.10-slim
 RUN apt update && apt install -y build-essential python3 -y python3-pip python3.11-venv protobuf-compiler curl git
 RUN python3 -m venv /opt/py_envs && \
   /opt/py_envs/bin/python -m pip install grpcio-tools
@@ -15,7 +15,9 @@ RUN python3 -m venv /opt/py_envs && \
 RUN curl -L --fail -o go1.23.7.linux-amd64.tar.gz https://go.dev/dl/go1.23.7.linux-amd64.tar.gz && \
     tar -C /usr/local -xzf go1.23.7.linux-amd64.tar.gz  && \
     rm go1.23.7.linux-amd64.tar.gz
-RUN /usr/local/go/bin/go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.6
+RUN /usr/local/go/bin/go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.6 && \
+    /usr/local/go/bin/go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1
+
 
 ENV PATH="/usr/local/go/bin:$PATH"
 # Set GOPATH and update PATH
@@ -25,7 +27,7 @@ RUN mkdir -p /go \
 
 ENV GOPATH=/go
 ENV PATH="$PATH:$GOPATH/bin"
-ENV PATH="$PATH:/root/go/bin/"
+ENV PATH="$PATH:/root/go/bin"
 
 
 #ENV PB_REL="https://github.com/protocolbuffers/protobuf/releases"
