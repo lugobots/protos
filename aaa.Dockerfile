@@ -7,7 +7,7 @@ FROM debian:12.10-slim
 #python -m pip install grpcio-tools
 #python -m grpc_tools.protoc -I./ --python_out=. --pyi_out=. --grpc_python_out=. test.proto
 #FROM debian:12.10-slim
-RUN apt update && apt install -y build-essential python3 -y python3-pip python3.11-venv protobuf-compiler curl git
+RUN apt update && apt install -y build-essential python3 -y python3-pip python3.9-venv protobuf-compiler curl git
 RUN python3 -m venv /opt/py_envs && \
   /opt/py_envs/bin/python -m pip install grpcio-tools
 #
