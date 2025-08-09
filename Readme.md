@@ -8,10 +8,9 @@ See the auto-generated [Documentation](./doc/docs.md) to learn all services and 
 
 ## Generating proto files
 
-The script `generate-protos.sh` will generate the proto files for you in different programming languages.
+Run 
 
-This script relies on the Docker image `lugobots/proto-gen` to create the proto files from inside a containers, thus
-you won't need to install other dependencies in your machine.
+`docker run -it --rm -v $(pwd)/src:/source -v $(pwd)/proto:/output grpc_builder`
 
 
 ## Services served by the Game Server

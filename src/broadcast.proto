@@ -133,6 +133,12 @@ message EventGameOver {
     // The game was interrupted because the score difference is too large to the remaining time.
     // Blame the knocked out team
     KNOCKOUT = 4;
+
+    // The game ended during extra time by golden goal
+    GOLDEN_GOL = 5;
+
+    // The game ended after the extra time is over
+    EXTRA_TIME_IS_OVER = 6;
   }
 
   enum BlameStop {
