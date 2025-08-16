@@ -42,6 +42,7 @@ message GameEvent {
     EventGameOver game_over = 6;
     EventDebugBreakpoint breakpoint = 7;
     EventDebugReleased debug_released = 8;
+    EventPeriodChanged period_changed = 9;
   }
 }
 
@@ -118,6 +119,12 @@ message EventGoal {
   Team.Side side = 1;
   // @todo implementing the player who scored.
 }
+
+
+message EventPeriodChanged {
+  GameSnapshot.Period period = 1;
+}
+
 
 // Represents the event of having the game ended.
 message EventGameOver {

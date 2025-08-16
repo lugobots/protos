@@ -61,6 +61,15 @@ message GameSnapshot {
         // And it also can be over after Playing state if that was the last turn of the match.
         OVER = 99;
     }
+
+    enum Period {
+        REGULAR_TIME = 0;
+
+        OVERTIME = 1;
+
+        SHOOTOUT = 2;
+    }
+
     // The game state defines which phase the game is. The phase determine what the server is doing, are going to do, or
     // what it is waiting for.
     State state = 1;
@@ -76,6 +85,8 @@ message GameSnapshot {
     uint32 turns_ball_in_goal_zone = 6;
     // Store the shot clock to control ball possession limit
     ShotClock shot_clock = 7;
+
+    Period period = 8;
 }
 
 // Stores all team elements and data.
