@@ -10,7 +10,13 @@ See the auto-generated [Documentation](./doc/docs.md) to learn all services and 
 
 Run 
 
-`docker run -it --rm -v $(pwd)/src:/source -v $(pwd)/proto:/output grpc_builder`
+``` 
+# (optional) first build the image
+docker build -t lugobots/proto-gen .
+
+# run the docker image that generates the protobuf files for each programming language supported
+docker run -it --rm -v $(pwd)/src:/source -v $(pwd)/proto:/output lugobots/proto-gen:latest`
+```
 
 
 ## Services served by the Game Server
@@ -39,32 +45,6 @@ You can pause/resume the game, or even change the elements' position.
 
 The main reason for having this service is to empower Machine Learning developers to create game states 
 programmatically and have full control over the game.
-
-
-# Support to Typescript
-
-The gRPC web tool, which would generate the proto directly to Typescripts, relies on web-based Javascript features, that
-are not available on Node environment.
-
-In order to have the Typescript typing, we can use a Typescript generator that only generates the `.d.ts` files.
-
-This project brings a Dockerfile that builds an image to use the TS typing generator.
-
-Build the image with:
-
-`docker build -t ts_typing_maker -f TypescriptTypingGen.Dockerfile .`
-
-And use the image with:
-
-```
-docker run -it -v $(pwd):/base ts_typing_maker protoc \
-    --plugin=protoc-gen-ts=/bin/grpc_tools_node_protoc \
-    --ts_out=/base/proto/js \
-    -I /base/src \
-    /base/src/*
-```
-
-These commands are also included in the `./generate-protos.sh` script.
 
 
 # Python intellisense support

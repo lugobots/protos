@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
 set -e
 
 
@@ -29,13 +30,11 @@ grpc_tools_node_protoc \
       --js_out=import_style=commonjs,binary:$OUT_DIR/nodejs  \
       -I $SRC_DIR $(find $SRC_DIR -name "*.proto") && echo "JS code generated" || (echo "Failed to generate JS code" && exit 1)
 
-grpc_tools_node_protoc  --help
-
 # Generating Typescript typing
 grpc_tools_node_protoc \
-      --plugin=protoc-gen-ts=/bin/grpc_tools_node_protoc \
+      --plugin=protoc-gen-ts=/usr/local/bin/protoc-gen-ts \
       --ts_out=grpc_js:$OUT_DIR/nodejs \
-      -I $SRC_DIR $(find $SRC_DIR -name "*.proto") && echo "TS code generated" || (echo "Failed to generate TS code" && exit 1)
+      -I "$SRC_DIR" $(find $SRC_DIR -name "*.proto") && echo "TS code generated" || (echo "Failed to generate TS code" && exit 1)
 
 
 echo "✅ Protobuf generation complete!"

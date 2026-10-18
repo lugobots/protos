@@ -30,14 +30,13 @@ RUN pip3 install --break-system-packages grpcio grpcio-tools
 RUN npm install -g node-pre-gyp grpc-tools protoc-gen-grpc grpc_tools_node_protoc_ts@5.3.2 protoc-gen-ts
 RUN npm i -g grpc-tools@1.11.2 --unsafe-perm
 RUN npm i -g typescript --unsafe-perm
-RUN ln -s /out/node_modules/.bin/protoc-gen-ts /bin/grpc_tools_node_protoc
 
 
 # Working directory for mounted volumes
 WORKDIR /work
 
 # Copy entrypoint script
-COPY entrypoint.sh /usr/local/bin/build-protos
-RUN chmod +x /usr/local/bin/build-protos
+COPY entrypoint.sh /usr/local/bin/build-protos.sh
+RUN chmod +x /usr/local/bin/build-protos.sh
 
-ENTRYPOINT ["build-protos"]
+ENTRYPOINT ["sh", "/usr/local/bin/build-protos.sh"]
