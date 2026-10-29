@@ -10,6 +10,7 @@
     - [EventGoal](#lugo-EventGoal)
     - [EventLostPlayer](#lugo-EventLostPlayer)
     - [EventNewPlayer](#lugo-EventNewPlayer)
+    - [EventPeriodChanged](#lugo-EventPeriodChanged)
     - [EventStateChange](#lugo-EventStateChange)
     - [GameEvent](#lugo-GameEvent)
     - [GameSetup](#lugo-GameSetup)
@@ -20,6 +21,8 @@
     - [WatcherRequest](#lugo-WatcherRequest)
   
     - [EventDebugBreakpoint.Breakpoint](#lugo-EventDebugBreakpoint-Breakpoint)
+    - [EventGameOver.BlameStop](#lugo-EventGameOver-BlameStop)
+    - [EventGameOver.EndingReason](#lugo-EventGameOver-EndingReason)
     - [GameSetup.ListeningMode](#lugo-GameSetup-ListeningMode)
     - [GameSetup.StartingMode](#lugo-GameSetup-StartingMode)
   
@@ -42,16 +45,30 @@
     - [BallProperties](#lugo-BallProperties)
     - [CommandResponse](#lugo-CommandResponse)
     - [GameProperties](#lugo-GameProperties)
+    - [GameSnapshotRequest](#lugo-GameSnapshotRequest)
+    - [GameSnapshotResponse](#lugo-GameSnapshotResponse)
     - [NextOrderRequest](#lugo-NextOrderRequest)
     - [NextTurnRequest](#lugo-NextTurnRequest)
     - [PauseResumeRequest](#lugo-PauseResumeRequest)
     - [PlayerProperties](#lugo-PlayerProperties)
+    - [ResetGameRequest](#lugo-ResetGameRequest)
+    - [ResetPlayerPositionsRequest](#lugo-ResetPlayerPositionsRequest)
+    - [ResetPlayerPositionsResponse](#lugo-ResetPlayerPositionsResponse)
     - [ResumeListeningRequest](#lugo-ResumeListeningRequest)
     - [ResumeListeningResponse](#lugo-ResumeListeningResponse)
   
     - [CommandResponse.StatusCode](#lugo-CommandResponse-StatusCode)
   
     - [Remote](#lugo-Remote)
+  
+- [rl_assistant.proto](#rl_assistant-proto)
+    - [PlayerOrdersOnRLSession](#lugo-PlayerOrdersOnRLSession)
+    - [PlayersOrders](#lugo-PlayersOrders)
+    - [RLResetConfig](#lugo-RLResetConfig)
+    - [RLSessionConfig](#lugo-RLSessionConfig)
+    - [TurnOutcome](#lugo-TurnOutcome)
+  
+    - [RLAssistant](#lugo-RLAssistant)
   
 - [server.proto](#server-proto)
     - [Ball](#lugo-Ball)
@@ -68,6 +85,7 @@
     - [ShotClock](#lugo-ShotClock)
     - [Team](#lugo-Team)
   
+    - [GameSnapshot.Period](#lugo-GameSnapshot-Period)
     - [GameSnapshot.State](#lugo-GameSnapshot-State)
     - [OrderResponse.StatusCode](#lugo-OrderResponse-StatusCode)
     - [Team.Side](#lugo-Team-Side)
@@ -114,6 +132,12 @@
 
 ### EventGameOver
 Represents the event of having the game ended.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| reason | [EventGameOver.EndingReason](#lugo-EventGameOver-EndingReason) |  | Reason for the end of the game |
+| blame | [EventGameOver.BlameStop](#lugo-EventGameOver-BlameStop) |  | Which team was responsible to cause the game to be interrupted |
 
 
 
@@ -167,6 +191,21 @@ Represents the event of having a new player connected to the game.
 
 
 
+<a name="lugo-EventPeriodChanged"></a>
+
+### EventPeriodChanged
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| period | [GameSnapshot.Period](#lugo-GameSnapshot-Period) |  |  |
+
+
+
+
+
+
 <a name="lugo-EventStateChange"></a>
 
 ### EventStateChange
@@ -199,6 +238,7 @@ Brings the game snapshot and the event in a specialised format.
 | game_over | [EventGameOver](#lugo-EventGameOver) |  |  |
 | breakpoint | [EventDebugBreakpoint](#lugo-EventDebugBreakpoint) |  |  |
 | debug_released | [EventDebugReleased](#lugo-EventDebugReleased) |  |  |
+| period_changed | [EventPeriodChanged](#lugo-EventPeriodChanged) |  |  |
 
 
 
@@ -318,6 +358,37 @@ Brings the game snapshot and the event in a specialised format.
 | ---- | ------ | ----------- |
 | ORDERS | 0 | Breakpoint that breaks the game before each player orders set be processed during the &#34;Playing&#34; state Each player&#39;s order set will be processed at once, so the breakpoint controls the process based on players, not on orders. |
 | TURN | 1 | Breakpoint that breaks the game before each player turn be processed during the &#34;Playing&#34; state |
+
+
+
+<a name="lugo-EventGameOver-BlameStop"></a>
+
+### EventGameOver.BlameStop
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| NORMAL | 0 |  |
+| BOTH_TEAMS | 1 |  |
+| HOME_TEAM | 2 |  |
+| AWAY_TEAM | 3 |  |
+
+
+
+<a name="lugo-EventGameOver-EndingReason"></a>
+
+### EventGameOver.EndingReason
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TIME_IS_OVER | 0 | Normal ending, the game ran until the end of the expected number of turns |
+| WAITING_EXPIRED | 1 | The game did not start. One of the teams or both teams do not have 11 bots connected |
+| NO_ENOUGH_PLAYER | 2 | The game was interrupted because too many bots of at least one team disconnected. |
+| EXTERNAL_REQUEST | 3 | The game was interrupted by an external command (it was stopped) |
+| KNOCKOUT | 4 | The game was interrupted because the score difference is too large to the remaining time. Blame the knocked out team |
+| GOLDEN_GOL | 5 | The game ended during extra time by golden goal |
+| EXTRA_TIME_IS_OVER | 6 | The game ended after the extra time is over |
 
 
 
@@ -564,6 +635,31 @@ It defines the velocity of an object.
 
 
 
+<a name="lugo-GameSnapshotRequest"></a>
+
+### GameSnapshotRequest
+
+
+
+
+
+
+
+<a name="lugo-GameSnapshotResponse"></a>
+
+### GameSnapshotResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| game_snapshot | [GameSnapshot](#lugo-GameSnapshot) |  |  |
+
+
+
+
+
+
 <a name="lugo-NextOrderRequest"></a>
 
 ### NextOrderRequest
@@ -606,6 +702,41 @@ It defines the velocity of an object.
 | number | [uint32](#uint32) |  |  |
 | position | [Point](#lugo-Point) |  |  |
 | velocity | [Velocity](#lugo-Velocity) |  |  |
+
+
+
+
+
+
+<a name="lugo-ResetGameRequest"></a>
+
+### ResetGameRequest
+
+
+
+
+
+
+
+<a name="lugo-ResetPlayerPositionsRequest"></a>
+
+### ResetPlayerPositionsRequest
+
+
+
+
+
+
+
+<a name="lugo-ResetPlayerPositionsResponse"></a>
+
+### ResetPlayerPositionsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| game_snapshot | [GameSnapshot](#lugo-GameSnapshot) |  |  |
 
 
 
@@ -668,6 +799,109 @@ The game server only offers this service on debug mode on.
 | SetPlayerProperties | [PlayerProperties](#lugo-PlayerProperties) | [CommandResponse](#lugo-CommandResponse) |  |
 | SetGameProperties | [GameProperties](#lugo-GameProperties) | [CommandResponse](#lugo-CommandResponse) |  |
 | ResumeListeningPhase | [ResumeListeningRequest](#lugo-ResumeListeningRequest) | [ResumeListeningResponse](#lugo-ResumeListeningResponse) |  |
+| ResetPlayerPositions | [ResetPlayerPositionsRequest](#lugo-ResetPlayerPositionsRequest) | [ResetPlayerPositionsResponse](#lugo-ResetPlayerPositionsResponse) |  |
+| ResetGame | [ResetGameRequest](#lugo-ResetGameRequest) | [CommandResponse](#lugo-CommandResponse) |  |
+| GetGameSnapshot | [GameSnapshotRequest](#lugo-GameSnapshotRequest) | [GameSnapshotResponse](#lugo-GameSnapshotResponse) |  |
+
+ 
+
+
+
+<a name="rl_assistant-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## rl_assistant.proto
+
+
+
+<a name="lugo-PlayerOrdersOnRLSession"></a>
+
+### PlayerOrdersOnRLSession
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| team_side | [Team.Side](#lugo-Team-Side) |  | Identify the bot&#39;s team side (Team_Home or Team_Away) |
+| number | [uint32](#uint32) |  | Player&#39;s number 1-11 |
+| behaviour | [string](#string) |  | if behaviour is not set, the orders will be executed |
+| orders | [Order](#lugo-Order) | repeated |  |
+
+
+
+
+
+
+<a name="lugo-PlayersOrders"></a>
+
+### PlayersOrders
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| default_behaviour | [string](#string) |  |  |
+| players_orders | [PlayerOrdersOnRLSession](#lugo-PlayerOrdersOnRLSession) | repeated |  |
+
+
+
+
+
+
+<a name="lugo-RLResetConfig"></a>
+
+### RLResetConfig
+nothing for now
+
+
+
+
+
+
+<a name="lugo-RLSessionConfig"></a>
+
+### RLSessionConfig
+nothing for now
+
+
+
+
+
+
+<a name="lugo-TurnOutcome"></a>
+
+### TurnOutcome
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| game_snapshot | [GameSnapshot](#lugo-GameSnapshot) |  |  |
+| score_changed | [bool](#bool) |  |  |
+| shot_clock_expired | [bool](#bool) |  |  |
+| goal_zone_timer_expired | [bool](#bool) |  |  |
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+
+<a name="lugo-RLAssistant"></a>
+
+### RLAssistant
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| StartSession | [RLSessionConfig](#lugo-RLSessionConfig) | [GameSnapshot](#lugo-GameSnapshot) stream | StartSession will create 11 player connections on each team and wait the game to be on the waiting status It will return a stream of game snapshots, like &#34;Game.JoinATeam&#34; does, but these GameSnapshot will be the same one returned by SendPlayersOrders. But you need to keep the stream open, otherwise the server will consider that the session is done. |
+| SendPlayersOrders | [PlayersOrders](#lugo-PlayersOrders) | [TurnOutcome](#lugo-TurnOutcome) | SendPlayersOrders will send all payers orders, and ignore the ones that do not have orders If there is no order from a player, it will behave are defined in PlayersOrders.default_behaviour. The valid values for default_behaviour are defined by the server. Please run the server help command for more information. |
+| ResetEnv | [RLResetConfig](#lugo-RLResetConfig) | [TurnOutcome](#lugo-TurnOutcome) | The training environment will need to reset the game status multiple times during the training session. Each time this occurs, the RL assistant must be notified by the trainer, as the game server does not emit any related events. When the environment is reset, the RL assistant will also reset its controllers to maintain synchronization with the game server. |
 
  
 
@@ -724,6 +958,7 @@ GameSnapshot stores all game elements data.
 | ball | [Ball](#lugo-Ball) |  | Store the ball element. |
 | turns_ball_in_goal_zone | [uint32](#uint32) |  | number of turns the ball is in a goal zone |
 | shot_clock | [ShotClock](#lugo-ShotClock) |  | Store the shot clock to control ball possession limit |
+| period | [GameSnapshot.Period](#lugo-GameSnapshot-Period) |  |  |
 
 
 
@@ -911,6 +1146,19 @@ Stores all team elements and data.
 
 
  
+
+
+<a name="lugo-GameSnapshot-Period"></a>
+
+### GameSnapshot.Period
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| REGULAR_TIME | 0 |  |
+| OVERTIME | 1 |  |
+| SHOOTOUT | 2 |  |
+
 
 
 <a name="lugo-GameSnapshot-State"></a>
